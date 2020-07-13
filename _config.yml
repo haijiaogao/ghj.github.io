@@ -4,7 +4,7 @@
 
 # Site
 title: Hexo
-subtitle: 'ss'
+subtitle: ''
 description: ''
 keywords:
 author: John Doe
@@ -13,8 +13,8 @@ timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://haijiaogao.github.io
-root: /
+url: 'http://haijiaogao.github.io/blogs'
+root: '/blogs/'
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -99,5 +99,5 @@ theme: landscape
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: 'git'
-  repo: https://github.com/haijiaogao/haijiaogao.github.io.git
+  repo: 'https://github.com/haijiaogao/haijiaogao.github.io.git'
   branch: gh-pages
