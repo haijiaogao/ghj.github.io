@@ -3,10 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Haijiao's 博客
-subtitle: ''
-description: ''
-keywords:
+title: Haijiao's Notes
+subtitle: '生活杂谈|技术随想'
+description: '成年人的世界，没有容易二字'
+keywords: Android
 author: Gaohaijiao
 language: zh-Hans
 timezone: 'Asia/Shanghai'
@@ -63,6 +63,7 @@ index_generator:
 
 # Category & Tag
 default_category: categories
+
 category_map:
 tag_map:
 
@@ -109,11 +110,8 @@ menu:
   home: /
   archives: /archives
   categories: /categories
+  about: /about/
 
 social:
     GitHub: https://github.com
     Email: 'haijiaogao1988@163.com'
-    Twitter: ''
-    Weibo: ''
-    DouBan: '' 
-    ZhiHu: ''
