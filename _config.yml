@@ -110,7 +110,7 @@ menu:
   home: /
   archives: /archives
   categories: /categories
-  about: /about/
+  about: /about
 
 social:
     GitHub: https://github.com

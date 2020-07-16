@@ -91,12 +91,12 @@ index_with_subtitle: false
 # Key is the name of menu item. If translate for this menu will find in languages - this translate will be loaded; if not - Key name will be used. Key is case-senstive.
 # Value before `||` delimeter is the target link.
 # Value after `||` delimeter is the name of FontAwesome icon. If icon (with or without delimeter) is not specified, question icon will be loaded.
-#menu:
-  #home: / || home
-  #about: /about/ || user
+# menu:
+  # home: /
+  # about: /about/
   #tags: /tags/ || tags
-  #categories: /categories/ || th
-  #archives: /archives/ || archive
+  # categories: /categories/
+  # archives: /archives/
   #schedule: /schedule/ || calendar
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
