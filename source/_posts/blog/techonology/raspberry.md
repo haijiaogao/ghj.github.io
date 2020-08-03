@@ -31,7 +31,7 @@ categories:
 
 ### 3. 树莓派首次联网，这里需要注意树莓派4b是带无线网卡的，可以直接先在tf卡制作好的系统中配置好无线ap信息。
 
-步骤参考：`https://shumeipai.nxez.com/hot-explorer#beginner`
+步骤参考：`https://shumeipai.nxez.com/2017/09/13/raspberry-pi-network-configuration-before-boot.html`
 ### 4. 把tf卡安装到树莓派上，开机。
 > 首次启动
 测试树莓派是否正常启动并且正常联网的方法：
