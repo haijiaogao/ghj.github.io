@@ -42,10 +42,36 @@ categories:
 
 ### 5. 必备应用安装
 
-以下个人观点：
+
+#### 配置apt国内源
+
+ 编辑/etc/apt/sources.listw文件 `sudo nano /etc/apt/sources.list` ,把原来的内容注释掉，增加国内源
+
+```
+deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main non-free contrib
+deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main non-free contrib
+```
+
+按 ctrl-o 保存，按 ctrl-x 关闭。
+
+同样的方法，把 /etc/apt/sources.list.d/raspi.list 文件也替换成下面的内容：
+
+```
+deb http://mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main ui
+```
+
+修改完后，在命令行执行:
+
+```
+sudo apt-get update& apt-get upgrade
+```
+
+由于buster-lit版本并没有安装vim，使用vi的时候非常不方便，如果习惯使用vi 编辑文件的话建议装上vim：
+
 ```
 sudo apt install vim 
 ```
+
 
 ### 6. 配置vnc server
 
