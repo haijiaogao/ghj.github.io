@@ -1,10 +1,16 @@
+---
+title: 一次ubuntu备份重装系统始末
+date: 2020-11-01 11:02:43
+tags: [Linux,Ubuntu]
+categories: Linux 
+---
+
 ## 重装系统总结
 
 ### 1. 备份系统所在磁盘：
 
-１．~/.*
+１．~/.*   所有常用的应用的以.开头的文件可以都copy下来，我并没有，我只copy了 .vim .oh-my-zsh .ssh  .git  ，但是在用的过程中发现有些没有考全，如bin/（在.bashrc和.zshrc文件中有引用到的目录）以及/opt目录下的所有的内容等
 
-所有常用的应用的以.开头的文件可以都copy下来，我并没有，我只copy了 .vim .oh-my-zsh .ssh  .git  ，但是在用的过程中发现有些没有考全，如bin/（在.bashrc和.zshrc文件中有引用到的目录）以及/opt目录下的所有的内容等
 2．document/常用软件，项目文件等
 3. desktop/日常文件等，这个其实只是单纯备份，用的时候再解压也一样
 
