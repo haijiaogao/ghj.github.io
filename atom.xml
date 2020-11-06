@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Haijiao&#39;s Notes</title>
+  
+  <subtitle>生活杂谈|技术随想</subtitle>
+  <link href="/blogs/atom.xml" rel="self"/>
+  
+  <link href="http://haijiaogao.github.io/blogs/"/>
+  <updated>2020-08-07T10:02:38.429Z</updated>
+  <id>http://haijiaogao.github.io/blogs/</id>
+  
+  <author>
+    <name>Gaohaijiao</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://haijiaogao.github.io/blogs/2020/08/07/hello-world/"/>
+    <id>http://haijiaogao.github.io/blogs/2020/08/07/hello-world/</id>
+    <published>2020-08-07T10:02:38.429Z</published>
+    <updated>2020-08-07T10:02:38.429Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      
+    
+    </summary>
+    
+    
+      <category term="杂" scheme="http://haijiaogao.github.io/blogs/categories/%E6%9D%82/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Raspberry 上手笔记</title>
+    <link href="http://haijiaogao.github.io/blogs/2020/07/16/blog/techonology/raspberry/"/>
+    <id>http://haijiaogao.github.io/blogs/2020/07/16/blog/techonology/raspberry/</id>
+    <published>2020-07-16T08:27:38.000Z</published>
+    <updated>2020-08-07T10:02:38.429Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><p>准备刷机用的东西包括（必备）：</p><ol><li><p>16Gtf卡一个加读卡器（<code>U盘不行，按说应该也可以，但是步骤繁琐，没有继续折腾</code>）</p></li><li><p>一根typeC数据线用于刷机</p></li><li><p>下载刷机包，由于同事手里有先前下载好的包和刷机工具，所以我省去了这一步。具体我刷的是buster的树莓派简化版。</p><blockquote><p>下载地址为：</p></blockquote></li></ol><ul><li>刷机工具<a href="https://www.balena.io/etcher/" target="_blank" rel="noopener">etcher</a>：<code>https://www.balena.io/etcher/</code></li><li>树莓派镜像：<code>https://www.raspberrypi.org/downloads/raspbian/</code></li></ul><h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>(以下都狠简单，在网上一搜一大堆，只是个人记录用)</p><h3 id="1-（废话，有空删掉）"><a href="#1-（废话，有空删掉）" class="headerlink" title="1. （废话，有空删掉）"></a>1. （废话，有空删掉）</h3><p>购买树莓派，本人在转转上买了二手树莓派4b一个，200块。</p><h3 id="2-使用刷机工具制作系统刷到tf卡上。"><a href="#2-使用刷机工具制作系统刷到tf卡上。" class="headerlink" title="2. 使用刷机工具制作系统刷到tf卡上。"></a>2. 使用刷机工具制作系统刷到tf卡上。</h3><p>步骤参考：<code>https://shumeipai.nxez.com/2019/04/17/https://www.fing.com/products/fing-appwrite-pi-sd-card-image-using-etcher-on-windows-linux-mac.html</code></p><h3 id="3-树莓派首次联网，这里需要注意树莓派4b是带无线网卡的，可以直接先在tf卡制作好的系统中配置好无线ap信息。"><a href="#3-树莓派首次联网，这里需要注意树莓派4b是带无线网卡的，可以直接先在tf卡制作好的系统中配置好无线ap信息。" class="headerlink" title="3. 树莓派首次联网，这里需要注意树莓派4b是带无线网卡的，可以直接先在tf卡制作好的系统中配置好无线ap信息。"></a>3. 树莓派首次联网，这里需要注意树莓派4b是带无线网卡的，可以直接先在tf卡制作好的系统中配置好无线ap信息。</h3><p>步骤参考：<code>https://shumeipai.nxez.com/2017/09/13/raspberry-pi-network-configuration-before-boot.html</code></p><h3 id="4-把tf卡安装到树莓派上，开机。"><a href="#4-把tf卡安装到树莓派上，开机。" class="headerlink" title="4. 把tf卡安装到树莓派上，开机。"></a>4. 把tf卡安装到树莓派上，开机。</h3><blockquote><p>首次启动<br>测试树莓派是否正常启动并且正常联网的方法：</p></blockquote><ol><li>通过串口查看，或者连接显示设备</li><li>都没有的话，只能过一会儿可以试试ssh raspberrypi.local 是否能连上。</li><li>或者是通过路由器或者是<a href="https://www.fing.com/products/fing-app" target="_blank" rel="noopener">fing</a>工具查看局域网中所有设备，如果说有名字叫Raspberry相关的，应该就是树莓派.(我是这样搞的)</li></ol><h3 id="5-必备应用安装"><a href="#5-必备应用安装" class="headerlink" title="5. 必备应用安装"></a>5. 必备应用安装</h3><h4 id="配置apt国内源"><a href="#配置apt国内源" class="headerlink" title="配置apt国内源"></a>配置apt国内源</h4><p> 编辑/etc/apt/sources.listw文件 <code>sudo nano /etc/apt/sources.list</code> ,把原来的内容注释掉，增加国内源</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br><span class="line">deb-src http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspbian&#x2F;raspbian&#x2F; buster main non-free contrib</span><br></pre></td></tr></table></figure><p>按 ctrl-o 保存，按 ctrl-x 关闭。</p><p>同样的方法，把 /etc/apt/sources.list.d/raspi.list 文件也替换成下面的内容：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;raspberrypi&#x2F; buster main ui</span><br></pre></td></tr></table></figure><p>修改完后，在命令行执行:</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update&amp; apt-get upgrade</span><br></pre></td></tr></table></figure><p>由于buster-lit版本并没有安装vim，使用vi的时候非常不方便，如果习惯使用vi 编辑文件的话建议装上vim：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install vim</span><br></pre></td></tr></table></figure><h3 id="6-配置vnc-server"><a href="#6-配置vnc-server" class="headerlink" title="6. 配置vnc server"></a>6. 配置vnc server</h3><p>参考树莓派实验室：<code>https://shumeipai.nxez.com/2018/08/31/raspberry-pi-vnc-viewer-configuration-tutorial.html</code></p><h3 id="7-我遇到的一些傻问题"><a href="#7-我遇到的一些傻问题" class="headerlink" title="7. 我遇到的一些傻问题"></a>7. 我遇到的一些傻问题</h3><ul><li><p>a. 没看教程，尝试自己安装vnc server<br>结果，当然失败了，系统自带的就行</p></li><li><p>b.使用其他客户端尝试登陆上去<br>,树莓派4b自带的是<a href="https://www.realvnc.com/en/connect/download/viewer/" target="_blank" rel="noopener">RealVNC</a><br>如果连接的话，需要单独下载客户端，我试过mac上面的dump desktop连不上去。提示错误：</p></li></ul><p><code>no configured security type is supported by 3.3 vnc viewer raspberry pi</code></p><ul><li>c. 下了RealVNC Viewer,但是傻憨憨的不知道默认用户名密码！查了半天才找到</li></ul><p>默认账号：<code>pi</code><br>默认密码：<code>raspberry</code></p><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>不要小瞧小小的树莓派，原本我以为都是linux的，和ubuntu的差不多，但是实际上还是有很多需要注意的地方，如果提前先在网上看看，可以避免很多低级错误！切记！</p><h2 id="学习链接："><a href="#学习链接：" class="headerlink" title="学习链接："></a>学习链接：</h2><p>官网：<code>https://www.raspberrypi.org/</code><br>树莓派实验室：<code>https://shumeipai.nxez.com/</code><br>树莓派技术圈：<code>https://raspberrypi.tech/</code></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;工具&quot;&gt;&lt;a href=&quot;#工具&quot; class=&quot;headerlink&quot; title=&quot;工具&quot;&gt;&lt;/a&gt;工具&lt;/h2&gt;&lt;p&gt;准备刷机用的东西包括（必备）：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;16Gtf卡一个加读卡器（&lt;code&gt;U盘不行，按说应该也可以，但是步骤繁琐
+      
+    
+    </summary>
+    
+    
+      <category term="Raspberry" scheme="http://haijiaogao.github.io/blogs/categories/Raspberry/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>使用hexo.js + travis.cli + Next.js主题在Github上搭建个人博客</title>
+    <link href="http://haijiaogao.github.io/blogs/2020/07/14/blog/techonology/how-to-create-blog/"/>
+    <id>http://haijiaogao.github.io/blogs/2020/07/14/blog/techonology/how-to-create-blog/</id>
+    <published>2020-07-14T07:08:42.000Z</published>
+    <updated>2020-08-07T10:02:38.429Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="一、动因"><a href="#一、动因" class="headerlink" title="一、动因"></a>一、动因</h2><p>笔者最近很闲，于是把很多之前在ToDoList上的计划提上了日程，其中就包含搭建自己的个人blog。又由于笔者算是互联网从业者，于是选择在自己的github搭建，而不是直接写在其他的技术blog上面。</p><h2 id="二、准备"><a href="#二、准备" class="headerlink" title="二、准备"></a>二、准备</h2><ol><li>首先，github账户一定要基本具备</li><li>考察网上成型方案，当然笔者在此走了许多的弯路，下面会详细记录笔者遇到的若干小白问题。</li><li>开动</li></ol><h2 id="三、方案1-基于Jekyll"><a href="#三、方案1-基于Jekyll" class="headerlink" title="三、方案1-基于Jekyll"></a>三、方案1-基于Jekyll</h2><p>基于Jekyll的方案是Github Page直接支持的方案，该方案简单，步骤少，配置少，基于markdown。但是我最终没有采用该方式。主要的原因是因为主题少，插件少，而且在本地运行的时候，需要安装ruby相关工具，ruby并不在我的技术栈，以及我想了解的技术栈之内，故放弃之。</p><p>Jekyll方案指南:<a href="https://pages.github.com/" target="_blank" rel="noopener">Jekyll方案指南</a></p><p>其中有个细节点需要注意：<br>在新建repo库的时候，如果说想以username.github.io/进行访问，则库名必须为username.github.io。</p><p>示意：<img src="images/create-repo.png" alt="repo库必须为`username.github.io`"></p><h2 id="四、方案2-基于node-js的hexo-js-Next-js主题方案"><a href="#四、方案2-基于node-js的hexo-js-Next-js主题方案" class="headerlink" title="四、方案2-基于node.js的hexo.js+Next.js主题方案"></a>四、方案2-基于node.js的hexo.js+Next.js主题方案</h2><p>方案一很好，入门方便，但是我在preview的时候总是对主题不太满意，之前看到过一些别人的blog的风格非常的简洁，搜了搜，是基于Next.js的，所以为了提高难度，改为用node.js+hexo.js+Next.js的方案二进行博客的搭建。</p><p>网上一搜教程一堆，正好发现了github 目前增加了自动化构建相关的内容，一并练练手，反正闲着也是闲着。</p><p>废话有点多，具体步骤如下：</p><h4 id="1-安装node：我的mac很久以前安装过node-js大概是3年前的旧事了，所以node版本很老，大概是6-x的版本，查看了一下官网上的稳定版都已经更新到了12-x而且，hexo的新版最低要求也是8-x的，所以我是从更新node开始的。"><a href="#1-安装node：我的mac很久以前安装过node-js大概是3年前的旧事了，所以node版本很老，大概是6-x的版本，查看了一下官网上的稳定版都已经更新到了12-x而且，hexo的新版最低要求也是8-x的，所以我是从更新node开始的。" class="headerlink" title="1. 安装node：我的mac很久以前安装过node.js大概是3年前的旧事了，所以node版本很老，大概是6.x的版本，查看了一下官网上的稳定版都已经更新到了12.x而且，hexo的新版最低要求也是8.x的，所以我是从更新node开始的。"></a>1. 安装node：我的mac很久以前安装过node.js大概是3年前的旧事了，所以node版本很老，大概是6.x的版本，查看了一下官网上的稳定版都已经更新到了12.x而且，hexo的新版最低要求也是8.x的，所以我是从更新node开始的。</h4><blockquote><p>安装（Mac os可以直接使用brew命令，其他平台参考node.js官网）</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install node</span><br></pre></td></tr></table></figure><blockquote><p>更新(我没有使用brew，而是通过一个nvm脚本)</p></blockquote><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash</span><br><span class="line"></span><br><span class="line">nvm list</span><br><span class="line"></span><br><span class="line">nvm install 12.18.2</span><br></pre></td></tr></table></figure><h4 id="2-安装hexo-cli"><a href="#2-安装hexo-cli" class="headerlink" title="2. 安装hexo-cli"></a>2. 安装hexo-cli</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure><h4 id="3-使用hexo初始化一个项目-我的叫blog"><a href="#3-使用hexo初始化一个项目-我的叫blog" class="headerlink" title="3. 使用hexo初始化一个项目,我的叫blog"></a>3. 使用hexo初始化一个项目,我的叫blog</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br></pre></td></tr></table></figure><p>接下来就可以用hexo相关的命令进行blog的配置和博客书写啦</p><h4 id="4-使用travis-cli实现github-repo库的自动编译"><a href="#4-使用travis-cli实现github-repo库的自动编译" class="headerlink" title="4. 使用travis-cli实现github repo库的自动编译"></a>4. 使用travis-cli实现github repo库的自动编译</h4><blockquote><p>需要注意的一点，使用travis-cli后会自动把主分支（假设hexo项目是push到主分支）上的hexo项目编译生成的public目录内容push到一个新分支，默认叫gh-pages。但是如果按照方案一的repo name命名后，github pages默认只能使用master分支的内容。so，此处repo库一定不要命名成 <del>username.github.io</del>，以笔者为例，笔者命名为<code>blogs</code></p></blockquote><blockquote><p><a href="https://hexo.io/zh-cn/docs/github-pages" target="_blank" rel="noopener">travis</a> 配置githubpages指南,参考链接，需要涉及到github的Token获取，客户端blog项目中增加travis.yml配置等内容，此处略过不提</p></blockquote><p>配置travis的过程算是顺利，但是，当我把项目代码push 到master分支后，我发现travis编译失败了，而且一直是失败在了yarn下载package配置的地方，经过网上高人指点，我在项目中删除掉了<code>package-lock.json</code>以及<code>yarn-lock.json</code>两个配置文件，并且修改了<code>travis.yml</code>配置，最终终于编译成功^ ^</p><p>我的travis.yml如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">sudo: false</span><br><span class="line">language: node_js</span><br><span class="line">node_js:</span><br><span class="line">  - 10 # use nodejs v10 LTS</span><br><span class="line">cache: npm</span><br><span class="line">branches:</span><br><span class="line">  only:</span><br><span class="line">    - master # build master branch only</span><br><span class="line">before-install:  # 我改了这里</span><br><span class="line">  - npm install -g hexo-cli # 我改了这里</span><br><span class="line">install: # 我改了这里</span><br><span class="line">  - npm install  # 我改了这里</span><br><span class="line">  - npm install hexo-deployer-git --save  # 我改了这里</span><br><span class="line">script:</span><br><span class="line">  - hexo clean # 我改了这里</span><br><span class="line">  - hexo generate # generate static files</span><br><span class="line">deploy:</span><br><span class="line">  provider: pages</span><br><span class="line">  skip-cleanup: true</span><br><span class="line">  github-token: $GH_TOKEN</span><br><span class="line">  keep-history: true</span><br><span class="line">  on:</span><br><span class="line">    branch: master</span><br><span class="line">  local-dir: public</span><br></pre></td></tr></table></figure><p><a href="https://github.com/haijiaogao/blogs/commit/6586f08a04dc01647bc6be4614d03e22d847356f" target="_blank" rel="noopener">Github提交</a></p><h4 id="5-使用hexo-deployer-git-实现私有库编译"><a href="#5-使用hexo-deployer-git-实现私有库编译" class="headerlink" title="5.使用hexo-deployer-git 实现私有库编译"></a>5.使用hexo-deployer-git 实现私有库编译</h4><ul><li><p>安装<a href="https://github.com/hexojs/hexo-deployer-git" target="_blank" rel="noopener">hexo-deployer-git</a></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></li><li><p>配置_config.yml</p></li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: &lt;repository url&gt; # https:&#x2F;&#x2F;bitbucket.org&#x2F;JohnSmith&#x2F;johnsmith.bitbucket.io</span><br><span class="line">  branch: [branch]</span><br><span class="line">  message: [message]</span><br></pre></td></tr></table></figure><ul><li>胜利只差一步执行</li></ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deploy -m &quot;deploy message &quot;</span><br></pre></td></tr></table></figure><h4 id="6-Next-js主题安装以及配置"><a href="#6-Next-js主题安装以及配置" class="headerlink" title="6. Next.js主题安装以及配置"></a>6. <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">Next.js</a>主题安装以及配置</h4><p>该主题非常的简洁，而且包含很多插件，有兴趣可以鼓捣鼓捣，应该还挺有意思<br>具体设置步骤在github中写的非常详尽，此处不再复述。</p><p>说一下我遇到的问题吧，在使用了next主题之后，发现顶部的home和archives以及categories几个跳转菜单，都跳不过去，本地调试不行，放在github中也不行，后面总是有几个奇怪的字符串，然后报404的错误。</p><ul><li><strong>Round 1</strong>:</li></ul><p>我开始以为是favico的问题，因为在chrome的调试窗口下，会报这个图标404，一顿操作猛如虎之后，图标确实陪好了，可这几个链接，还是不行</p><ul><li><strong>Round 2</strong></li></ul><p>我又猜测是我的_config.yml中配置的permlink的问题。好吧，该猜测实在是毫无根据。所以我又失败了</p><ul><li><strong>Round 3</strong></li></ul><p>莫非是主题的问题？我决定换回landscape主题试一下！奇迹般的可以跳过去！！<br>所以，Next主题到底哪里出了问题呢，我在github中搜到了相关的<a href="https://github.com/theme-next/hexo-theme-next/issues/2" target="_blank" rel="noopener">issue</a>，最后，我发现了问题的根源</p><blockquote><p>以下内容来自于<code>projectRoot/source/_data/next.yml</code></p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: &#x2F; || home</span><br><span class="line">  #about: &#x2F;about&#x2F; || user</span><br><span class="line">  #tags: &#x2F;tags&#x2F; || tags</span><br><span class="line">  categories: &#x2F;categories&#x2F; || th</span><br><span class="line">  archives: &#x2F;archives&#x2F; || archive</span><br><span class="line">  #schedule: &#x2F;schedule&#x2F; || calendar</span><br><span class="line">  #sitemap: &#x2F;sitemap.xml || sitemap</span><br><span class="line">  #commonweal: &#x2F;404&#x2F; || heartbeat</span><br></pre></td></tr></table></figure><p>万恶之源就在于<code>*home: / ~~|| home~~*</code> || home也生成到了路径里面！！</p><blockquote><p>以下是正确示范</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  home: &#x2F;</span><br><span class="line">  #about: &#x2F;about&#x2F; || user</span><br><span class="line">  #tags: &#x2F;tags&#x2F; || tags</span><br><span class="line">  categories: &#x2F;categories&#x2F;</span><br><span class="line">  archives: &#x2F;archives&#x2F;</span><br><span class="line">  #schedule: &#x2F;schedule&#x2F; || calendar</span><br><span class="line">  #sitemap: &#x2F;sitemap.xml || sitemap</span><br><span class="line">  #commonweal: &#x2F;404&#x2F; || heartbeat</span><br></pre></td></tr></table></figure><p>其他的细枝末节就不说啦，我的小站总算是完成了万里长征的第一步。</p><h2 id="Refreence："><a href="#Refreence：" class="headerlink" title="Refreence："></a>Refreence：</h2><p>Hexo:<br><a href="https://hexo.io/zh-cn/docs/github-pages" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/github-pages</a><br><a href="https://hexo.io/zh-cn/docs/permalinks" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/permalinks</a></p><p>Travis:<br><a href="https://docs.travis-ci.com/" target="_blank" rel="noopener">https://docs.travis-ci.com/</a></p><p>Next.js:<br><a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">https://github.com/iissnan/hexo-theme-next</a></p><h2 id="完！"><a href="#完！" class="headerlink" title="完！"></a>完！</h2>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;一、动因&quot;&gt;&lt;a href=&quot;#一、动因&quot; class=&quot;headerlink&quot; title=&quot;一、动因&quot;&gt;&lt;/a&gt;一、动因&lt;/h2&gt;&lt;p&gt;笔者最近很闲，于是把很多之前在ToDoList上的计划提上了日程，其中就包含搭建自己的个人blog。又由于笔者算是互联网从业
+      
+    
+    </summary>
+    
+    
+      <category term="Techonology" scheme="http://haijiaogao.github.io/blogs/categories/Techonology/"/>
+    
+      <category term="Node.js" scheme="http://haijiaogao.github.io/blogs/categories/Techonology/Node-js/"/>
+    
+    
+      <category term="Node.js" scheme="http://haijiaogao.github.io/blogs/tags/Node-js/"/>
+    
+      <category term="hexo.js" scheme="http://haijiaogao.github.io/blogs/tags/hexo-js/"/>
+    
+      <category term="travis.cli" scheme="http://haijiaogao.github.io/blogs/tags/travis-cli/"/>
+    
+      <category term="Next.js" scheme="http://haijiaogao.github.io/blogs/tags/Next-js/"/>
+    
+      <category term="Github" scheme="http://haijiaogao.github.io/blogs/tags/Github/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于我</title>
+    <link href="http://haijiaogao.github.io/blogs/2020/07/14/about/me/"/>
+    <id>http://haijiaogao.github.io/blogs/2020/07/14/about/me/</id>
+    <published>2020-07-14T06:53:13.000Z</published>
+    <updated>2020-08-07T10:02:38.429Z</updated>
+    
+    <content type="html"><![CDATA[<p>大龄已婚已育Android开发程序媛一枚，优点是已婚已育，有个儿子😂</p><p>好吧，虽然如此，还是想更多尝试一下新的东西，还好年龄以及工龄没有阻碍我的好奇心。</p><p>That‘s me！</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;大龄已婚已育Android开发程序媛一枚，优点是已婚已育，有个儿子😂&lt;/p&gt;
+&lt;p&gt;好吧，虽然如此，还是想更多尝试一下新的东西，还好年龄以及工龄没有阻碍我的好奇心。&lt;/p&gt;
+&lt;p&gt;That‘s me！&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="杂" scheme="http://haijiaogao.github.io/blogs/categories/%E6%9D%82/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Test Post</title>
+    <link href="http://haijiaogao.github.io/blogs/2020/07/13/Test-Post/"/>
+    <id>http://haijiaogao.github.io/blogs/2020/07/13/Test-Post/</id>
+    <published>2020-07-13T02:19:16.000Z</published>
+    <updated>2020-08-07T10:02:38.429Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>
