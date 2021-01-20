@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"haijiaogao.github.io","root":"/blogs/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="重装系统总结1. 备份系统所在磁盘：１．~&#x2F;.*   所有常用的应用的以.开头的文件可以都copy下来，我并没有，我只copy了 .vim .oh-my-zsh .ssh  .git  ，但是在用的过程中发现有些没有考全，如bin&#x2F;（在.bashrc和.zshrc文件中有引用到的目录）以及&#x2F;opt目录下的所有的内容等 2．document&#x2F;常用软件，项目文件等3. desktop&#x2F;日常文件等，这个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次ubuntu备份重装系统始末">
+<meta property="og:url" content="http://haijiaogao.github.io/blogs/2020/11/01/ubuntu/reinstall-ubuntu/index/">
+<meta property="og:site_name" content="Haijiao&#39;s Notes">
+<meta property="og:description" content="重装系统总结1. 备份系统所在磁盘：１．~&#x2F;.*   所有常用的应用的以.开头的文件可以都copy下来，我并没有，我只copy了 .vim .oh-my-zsh .ssh  .git  ，但是在用的过程中发现有些没有考全，如bin&#x2F;（在.bashrc和.zshrc文件中有引用到的目录）以及&#x2F;opt目录下的所有的内容等 2．document&#x2F;常用软件，项目文件等3. desktop&#x2F;日常文件等，这个">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-01T03:02:43.000Z">
+<meta property="article:modified_time" content="2020-11-06T03:11:22.340Z">
+<meta property="article:author" content="Gaohaijiao">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Ubuntu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://haijiaogao.github.io/blogs/2020/11/01/ubuntu/reinstall-ubuntu/index/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>一次ubuntu备份重装系统始末 | Haijiao's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blogs/atom.xml" title="Haijiao's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Haijiao's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活杂谈|技术随想</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blogs/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haijiaogao.github.io/blogs/2020/11/01/ubuntu/reinstall-ubuntu/index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Gaohaijiao">
+      <meta itemprop="description" content="成年人的世界，没有容易二字">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Haijiao's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一次ubuntu备份重装系统始末
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-01 11:02:43" itemprop="dateCreated datePublished" datetime="2020-11-01T11:02:43+08:00">2020-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-06 11:11:22" itemprop="dateModified" datetime="2020-11-06T11:11:22+08:00">2020-11-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="重装系统总结"><a href="#重装系统总结" class="headerlink" title="重装系统总结"></a>重装系统总结</h2><h3 id="1-备份系统所在磁盘："><a href="#1-备份系统所在磁盘：" class="headerlink" title="1. 备份系统所在磁盘："></a>1. 备份系统所在磁盘：</h3><p>１．~/.*   所有常用的应用的以.开头的文件可以都copy下来，我并没有，我只copy了 .vim .oh-my-zsh .ssh  .git  ，但是在用的过程中发现有些没有考全，如bin/（在.bashrc和.zshrc文件中有引用到的目录）以及/opt目录下的所有的内容等</p>
+<p>2．document/常用软件，项目文件等<br>3. desktop/日常文件等，这个其实只是单纯备份，用的时候再解压也一样</p>
+<h3 id="2-重装后工作"><a href="#2-重装后工作" class="headerlink" title="2.重装后工作"></a>2.重装后工作</h3><h3 id="首先是apt-update，然后安装各种包-vim-git-autojump-chrome-openjdk-sublime等以及编译相关的"><a href="#首先是apt-update，然后安装各种包-vim-git-autojump-chrome-openjdk-sublime等以及编译相关的" class="headerlink" title="首先是apt-update，然后安装各种包(vim,git,autojump,chrome ,openjdk,sublime等以及编译相关的)"></a>首先是apt-update，然后安装各种包(vim,git,autojump,chrome ,openjdk,sublime等以及编译相关的)</h3><blockquote>
+<p>open-jdk，chrome，sublime等需要单独添加源以及key。</p>
+</blockquote>
+<h3 id="搜狗输入法环境搭建"><a href="#搜狗输入法环境搭建" class="headerlink" title="搜狗输入法环境搭建"></a>搜狗输入法环境搭建</h3><ol>
+<li>下载deb包：官网下载，很小，几乎不用备份</li>
+<li>shell执行<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i sogouxxx.deb</span><br><span class="line"></span><br><span class="line">sudo apt install -f</span><br></pre></td></tr></table></figure></li>
+<li>打开设置，languagueand locale,增加中文语言，安装语言相关更新，切换输入接口为fcitx,系统默认为ibus,然后重启</li>
+</ol>
+<p>4.重启后，右上角可以配置fxitx，添加输入法，取消掉当前语言小钩钩，然后搜索sogou,并添加，就可以输入中文了。</p>
+<p>参考：<code>https://www.jianshu.com/p/cafe12618293</code></p>
+<h3 id="网络环境搭建"><a href="#网络环境搭建" class="headerlink" title="网络环境搭建"></a>网络环境搭建</h3><ol>
+<li>clash</li>
+</ol>
+<p>用的备份的<code>clash-linux-amd64-v0.19.0.gz</code>，解压文件.然后mv to /opt ，最后ln到usr/bin/clash</p>
+<p>把备份的配置文件放在~/.config/clash下面之后就可以在命令行执行clash 启动应用了</p>
+<h3 id="备份文件的还原"><a href="#备份文件的还原" class="headerlink" title="备份文件的还原"></a>备份文件的还原</h3><p>主要就是我备份的那些软件，配置等等。</p>
+<h3 id="一些没有备份的工作以及日常应用的安装："><a href="#一些没有备份的工作以及日常应用的安装：" class="headerlink" title="一些没有备份的工作以及日常应用的安装："></a>一些没有备份的工作以及日常应用的安装：</h3><p>** sublime **</p>
+<p>1.安装依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install apt-transport-https ca-certificates curl software-properties-common</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Import the repository’s GPG key using the following curl command :</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https:&#x2F;&#x2F;download.sublimetext.com&#x2F;sublimehq-pub.gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
+<p>3.Add the Sublime Text APT repository to your system’s software repository list by typing:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository &quot;deb https:&#x2F;&#x2F;download.sublimetext.com&#x2F; apt&#x2F;stable&#x2F;&quot;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>Once the repository is enabled, update apt sources and install Sublime Text 3 with the following commands:</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install sublime-text</span><br></pre></td></tr></table></figure>
+<p>5.完成，首次打开时需要输入License，搜索到有效的license来自<code>https://gist.github.com/mehedicsit/7389e31b7857b377870a32e91be1c7c5</code></p>
+<p>如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Thanks GUys use this oone</span><br><span class="line"></span><br><span class="line">----- BEGIN LICENSE -----</span><br><span class="line">Member J2TeaM</span><br><span class="line">Single User License</span><br><span class="line">EA7E-1011316</span><br><span class="line">D7DA350E 1B8B0760 972F8B60 F3E64036</span><br><span class="line">B9B4E234 F356F38F 0AD1E3B7 0E9C5FAD</span><br><span class="line">FA0A2ABE 25F65BD8 D51458E5 3923CE80</span><br><span class="line">87428428 79079A01 AA69F319 A1AF29A4</span><br><span class="line">A684C2DC 0B1583D4 19CBD290 217618CD</span><br><span class="line">5653E0A0 BACE3948 BB2EE45E 422D2C87</span><br><span class="line">DD9AF44B 99C49590 D2DBDEE1 75860FD2</span><br><span class="line">8C8BB2AD B2ECE5A4 EFC08AF2 25A9B864</span><br><span class="line">------ END LICENSE ------​</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>5.install package manager,由于我配置了代理，直接ctrl+shift+p ,输入install package 之后回车就安装成功了，如果不成功可参考网上其他方案</p>
+<p>electronic-wechat</p>
+<p>参考：<code>https://www.linuxbabe.com/desktop-linux/install-wechat-linux</code></p>
+<p>由于我有备份electronic-wechat的zip包，所以采用直接解压缩安装的方式：<br>How To Install Electronic Wechat on Linux via Tarball<br>This is a traditional way to install Wechat on Linux. Go to github and download the tar.gz file. Choose linux-x64.tar.gz or linux-ia32.tar.gz according to your OS architecture. Once downloaded, open a terminal window and navigate to the download folder where the tar.gz file is located. Then issue the following command to extract it.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar xvf linux-x64.tar.gz</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">unzip electronic-wechat-linux-x64-2.3.1.zip -d electronic-wechat</span><br></pre></td></tr></table></figure>
+<p>打开electronic-wechat目录后执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;electronic-wechat</span><br></pre></td></tr></table></figure>
+<p>下面步骤为了方便使用，并非必须</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo mv &#123;path to electronic-wechat&#125;&#x2F;electronic-wechat-linux-x64 &#x2F;opt</span><br><span class="line"></span><br><span class="line">sudo ln -s &#x2F;opt&#x2F;electronic-wechat-linux-x64&#x2F;electronic-wechat &#x2F;usr&#x2F;bin&#x2F;wechat</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>So now we just need to press ** ALT+F2 ** and enter wechat command to launch the WeChat client on Linux.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/blogs/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/blogs/tags/Ubuntu/" rel="tag"># Ubuntu</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2020/07/16/blog/techonology/raspberry/" rel="prev" title="Raspberry 上手笔记">
+      <i class="fa fa-chevron-left"></i> Raspberry 上手笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blogs/2020/11/06/blog/java/concurrentHashMap/index/" rel="next" title="Difference between ConcurrentHashMap and HashMap">
+      Difference between ConcurrentHashMap and HashMap <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%87%8D%E8%A3%85%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">重装系统总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%A4%87%E4%BB%BD%E7%B3%BB%E7%BB%9F%E6%89%80%E5%9C%A8%E7%A3%81%E7%9B%98%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">1. 备份系统所在磁盘：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%87%8D%E8%A3%85%E5%90%8E%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.2.</span> <span class="nav-text">2.重装后工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E6%98%AFapt-update%EF%BC%8C%E7%84%B6%E5%90%8E%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8D%E5%8C%85-vim-git-autojump-chrome-openjdk-sublime%E7%AD%89%E4%BB%A5%E5%8F%8A%E7%BC%96%E8%AF%91%E7%9B%B8%E5%85%B3%E7%9A%84"><span class="nav-number">1.3.</span> <span class="nav-text">首先是apt-update，然后安装各种包(vim,git,autojump,chrome ,openjdk,sublime等以及编译相关的)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E7%8B%97%E8%BE%93%E5%85%A5%E6%B3%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.4.</span> <span class="nav-text">搜狗输入法环境搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">1.5.</span> <span class="nav-text">网络环境搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%87%E4%BB%BD%E6%96%87%E4%BB%B6%E7%9A%84%E8%BF%98%E5%8E%9F"><span class="nav-number">1.6.</span> <span class="nav-text">备份文件的还原</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E6%B2%A1%E6%9C%89%E5%A4%87%E4%BB%BD%E7%9A%84%E5%B7%A5%E4%BD%9C%E4%BB%A5%E5%8F%8A%E6%97%A5%E5%B8%B8%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%89%E8%A3%85%EF%BC%9A"><span class="nav-number">1.7.</span> <span class="nav-text">一些没有备份的工作以及日常应用的安装：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Gaohaijiao</p>
+  <div class="site-description" itemprop="description">成年人的世界，没有容易二字</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blogs/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/haijiaogao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;haijiaogao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:haijiaogao1988@163.com" title="E-Mail → mailto:haijiaogao1988@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gaohaijiao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/muse.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
