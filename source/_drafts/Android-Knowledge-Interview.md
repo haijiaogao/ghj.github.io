@@ -232,55 +232,302 @@ LifeCycle： 构建生命周期感知型组件，这些组件可以根据 Activi
 WorkManager：满足您的后台调度需求
 Navigation：管理应用流程
 ViewModels： 帮助应用实现更好的MVVM架构
-DataBinding： 主要是基于依赖注入实现配置化UI的框架，对比框架有ViewBindings，GreenOrm
+DataBinding： 主要是基于依赖注入实现配置化UI的框架，对比框架有ViewBindings，GreenOrm,Dagger2
 ConstraintLayout: 主要是可以减少布局层数，实现更灵活的页面布局
 
 
 
 
 ### 线程间通信方式有几种
+1. 线程间通讯，首先可以通过静态共享变量的方式，同一个静态变量，a线程也操作，b线程也操作，完全没有问题，如果不想出现同步问题，加锁就好了。
+2. 使用Handler，A线程一个Handler，B线程一个Handler，两个线程通过各自的Handler给对方发消息，完全没有问题。但是注意，在使用Handler的时候要在Handler的run方法中，各自调用Looper.prepare,和Looper.run方法。
+3. 通过各种事件总线，在线程中订阅对方的消息，也是可以的，但是感觉有点大材小用了。
+
+扩展一下，Android中常常讨论的工作线程和主线程通信的方式：
+在一个Android的应用的进程中，一共只有一个主线程，既MainThread。MainThread负责回调Activity的生命周期方法，以及绘制界面等操作，所以异常的重要。其他非重要的，或者是耗时较长，耗用内存较多的工作，尽量放在其他线程中去做，做完后再回到主线程上反馈结果。
+
+和主线程通信的方式：
+1. AsyncTask，一套完整的异步任务模板，适合完成一个单纯的可能需要和页面产生交互的任务，定制一个异步任务，只需要继承他，并且在对应的模板方法中写好UI逻辑和工作线程的逻辑就好。缺点是比较死板，还有就是和某个界面非常耦合，因为任务执行前和执行后的逻辑大多数都和具体的页面的元素有关，所以如果不是特别通用的逻辑，最好是直接写在Activity 中比较好，因此，比较难以通用化，流程化。
+2. 通过Handler，在子线程中，传入主线程的Handler（注意引用应该为弱引用，这样才不会在一个Activity完成之后导致无法回收的风险），然后从工作线程中给主线程postMessage。
+3. Looper.mainLooper(),获取到主线程的Looper，然后定义一个Handler（把主线程的Looper传入进去），然后在需要通信的地方，使用handler.postRunable()方法让Runable中的run方法执行在主线程之上。
+4. 通过本地广播的方式，（非本地广播也是可以的，但是消耗较大，需要占用系统AMS中任务队列的资源），注意，本地广播的实现原理也是基于3的。
+
 
 ### 为什么在Looper中while true 取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系
 
+Looper中的loop方法中看似是死循环的方法里面，为什么不会主线程呢，原因有一，主线程和进程周期息息相关，如果进程被杀死了，这里的主线程必然就退出了，第二点是在loop方法中执行的方法，是从MessageQueue队列中取出消息，该方法调用了native方法 nativePollOnce（），这个方式是基于Linux的epoll机制，简而来说，就是通过文件阻塞住线程的执行，当有消息进来的时候，这个方法就会从阻塞状态恢复，取出消息，继续执行。所以，主线程随着进程一直执行，并不会阻塞。
+
+
+Looper内部维护一个消息队列，他与当前声明他的线程绑定（ThreadLocal中保存着Looper本身，通过ThreadLocal锁，保证Looper和线程的绑定），Looper的作用，就是在调用loop方法之后，持续不断的从MessageQueue中取出消息。MessageQueue中的消息从哪儿来呢，从Handler中来，Handler中，必须要有一个Looper对象，如果没有，在使用Handler进行操作的时候，就会报错 the looper must call loop before you post message（类似）。。。所以通过Handler进行postMessage或者是postRunnalbe本质上都是通过looper向looper的消息队列中push Message对象。然后在loop方法中处理。
+
+
 ### 为什么不能在工作线程直接刷新UI
+因为会报错吧！
+
+刷新UI，会回调View的invalidate方法，而这个方法中，会检测线程是否为主线程，通过Looper吧，如果不是主线程，就报错。
+
+但是，据说，有一种方法可以欺骗住invalidate方法，但是我觉得意义不大。
+
+
 
 ### Android 自定义View和ViewGroup需要实现的方法 
 
+View： onMeasure ，draw方法， onConfigChange方法
+
+ViewGroup： onMeasure，onLayout onConfigChange方法需要按照需求去定制
+
+
 ###　Android draw， onDraw ，onLayout，方法的区别和联系
+onLayout方法，主要是ViewGroup在绘制的时候，用来控制如何布局子view的位置和大小
+draw方法： 主要是用来给View自定义的时候，去定义如何绘制。
+而onDraw方法：我用到它主要是在做ViewGroup自定义的时候，去定制ViewGroup上的一些绘制操作。因为ViewGroup的draw方法其实可能会有很多继承的方法，尽量不要去动。
 
 
 ### Android 绘图相关 Paint 几种颜色混合模式
-
+就是两种图形，第一次绘制的是dest，叠加上去的是src，两次绘制图形的交集、并集和补集，以及颜色叠加的时候用哪一种，透明度用谁的，或者是混合或是加强的巴拉巴拉这种。一共多达10来种变化。这种方式在绘制圆角的时候，可以避免使用clippath产生的毛边。
 
 ### Android Animation类型
 
+
+1. Tween动画（补间动画）： 就是你提供几个值和动画类型，以及动画市场和动画插值器，然后根据时长和插值器，自动计算动画的幅度的动画。
+   1. View动画：传统动画，都是你定义个动画（长度，类型，插值器）通过AnimationUtils加载xml定义好的动画，然后调用view的playAnimation方法
+   2. Object动画：更灵活，然后可以直接定义到view的属性上去，非常的方便好用。
+      1. Property动画：
+      2. Value动画：
+
+2. 帧动画：一堆图片叠起来，一张一张播
+
 ### 如何优化图片加载
+1. 对图片进行裁剪以及压缩，加载合适大小的图片
+2. 使用缓存，在图片加载数量较多的时候，重复利用对象。
+3. 在从网络上下载图片的时候，使用holder图片。
+4. 如果绘制图片，不要求太高质量，无透明度，使用rgb565，比使用rgb8888，节省一半左右的空间
+5. 减少过度绘制，如果可以的话，只绘制变化的区域，不要大面积绘制。
+
+
 
 ### 实现一个简单的LruCache
 
+LruCache中使用的数据结构为一个LinkedHashMap，它允许传入一个参数，就是在插入后调整链表的顺序，把刚操作的这个元素放在链表的头部，这样如果说队列满了，就开始优先移除掉最近最少使用的对象。
+https://www.cnblogs.com/clnchanpin/p/6854999.html
+
+```code=java
+package com.knowledgeStudy.lrucache;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+/**
+ * 固定大小 的LRUCache<br>
+ * 线程安全
+ **/
+public class LRUCache<K, V> {
+    private static final float factor = 0.75f;//扩容因子
+    private Map<K, V> map; //数据存储容器
+    private int cacheSize;//缓存大小
+    public LRUCache(int cacheSize) {
+        this.cacheSize = cacheSize;
+        int capacity = (int) Math.ceil(cacheSize / factor) + 1;
+        map = new LinkedHashMap<K, V>(capacity, factor, true) {
+            private static final long serialVersionUID = 1L;
+            /**
+             * 重写LinkedHashMap的removeEldestEntry()固定table中链表的长度
+             **/
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+                boolean todel = size() > LRUCache.this.cacheSize;
+                return todel;
+            }
+        };
+    }
+    /**
+     * 依据key获取value
+     *
+     * @param key
+     * @return value
+     **/
+    public synchronized V get(K key) {
+        return map.get(key);
+    }
+    /**
+     * put一个key-value
+     *
+     * @param key
+     *            value
+     **/
+    public synchronized void put(K key, V value) {
+        map.put(key, value);
+    }
+    /**
+     * 依据key来删除一个缓存
+     *
+     * @param key
+     **/
+    public synchronized void remove(K key) {
+        map.remove(key);
+    }
+    /**
+     * 清空缓存
+     **/
+    public synchronized void clear() {
+        map.clear();
+    }
+    /**
+     * 已经使用缓存的大小
+     **/
+    public synchronized int cacheSize() {
+        return map.size();
+    }
+    /**
+     * 获取缓存中全部的键值对
+     **/
+    public synchronized Collection<Map.Entry<K, V>> getAll() {
+        return new ArrayList<Map.Entry<K, V>>(map.entrySet());
+    }
+}
+```
+
+
+
+
 
 ### Android中新增的几种数据类型 
+SparseArray,ArrayMap,以及LongSparseArray等是Android为了更适合嵌入式设备优化的map。
 
-SparseArray，IntSparseArray等
+1. HashMap：Key和Value都需要自动装箱存储，并且，为了支持java的Iterator接口，HashMap额外还存储了EntrySet对象。所以对于会增加内存消耗，在数据量比较多的适合比较明显。HashMap的存入和读取时间复杂度为O（1）。
+
+2. ArrayMap： Key和Value都需要装箱，但是，在内部实现的时候，没有存储额外的对象，内部通过一个Object[]用来存储key和Value，key和value交叉存储，另外通过一个 int数组存储key的hashcode。这样ArrayMap的存入和读取的时间复杂度都是O（logN）
+
+   * Key/Value会被自动装箱。
+   * key会存储在mArray[]的下一个可用的位置。而value会存储在mArray[]中key的下一个位置。（key和value在mArray中交叉存储）
+   * key的哈希值会被计算出来并存储在mHashed[]中。
+   * 当查找一个key的时候：计算key的hashcode。在mHashes[]中对这个hashcode进行二分法查找。也就意味着时间复杂度增加到了O(logN)
+   * 一旦我们得到了这个哈希值的位置index。我们就知道这个key是在mArray的2index的位置，而value则在2index+1的位置。
+   这个ArrayMap还是没能解决自动装箱的问题。当put一对键值对进入的时候，它们只接受Object，但是我们相对于HashMap来说每一次put会少创建一个对象(HashMapEntry)。这是不是值得我们用O(1)的查找复杂度来换呢？对于大多数app应用来说是值得的。
+
+SparseArray
+SparseArray，存储的是key为int类型的map，其内部实现上使用两个数组，一个是int类型的key数组，一个是Object[]类型的Value数组。
+当保存一对键值对的时候：
+
+key（不是它的hashcode）保存在mKeys[]的下一个可用的位置上。所以不会再对key自动装箱了。
+value保存在mValues[]的下一个位置上，value还是要自动装箱的，如果它是基本类型。
+查找的时候：
+   * 查找key还是用的二分法查找。也就是说它的时间复杂度还是O(logN) 知道了key的index，也就可以用key的index来从mValues中检索出value。
+   * 相较于HashMap,我们舍弃了Entry和Object类型的key,放弃了HashCode并依赖于二分法查找。在添加和删除操作的时候有更好的性能开销。
+其他类型的如LongSparseArray，StringSparseArray都和SparseArray类似，只不过key的数组类型换成了对应的基本数据类型。
+
+
+引申：在数据结构和算法的设计上，常常要权衡时间复杂度和空间复杂度。需要根据具体情况具体分析，按照常理来说，HashMap的设计非常优秀，通过hash算法，把随机存取的复杂度降低到O（N）但是，他的自动装箱和数据冗余，在目前的移动设备上，常常都是内存较为金贵，而cpu的算力越来越高。所以SparseArray的这种以时间换空间的策略就更加适合移动端设备。
 
 ## service 
 ### Android Service相关知识
 1. 生命周期。Service类型，两种方式 start&bind区别 。
+   startService的情况：
+
+   onCreate-onStartCommond-onStart-onStop-onDestory 
+
+   而bindService的情况：
+   onCreate-onBind-onUnBind-onDestory
+   其中 onDestory是在所有binder都unbind之后自动调用
 
 2. Service里面弹出Dialog的方式
-
+需要设置Dialog的类型为SystemDialog，但是需要有系统权限类似于Alert_System_Dialog这种的才可以成功
 
 
 ## 广播
 1.广播的类型
+发送广播的类型：
+	1. 普通广播： 
+	2. 系统广播： Android定义好的，由系统应用以及系统服务所发出来的广播，如Wifi信号变化，联网，网络断开，时间日期变化等等的广播
+	3. 	有序广播：OrderedBroadcast，这种广播，会按照接受者所定义的优先级，以及注册的顺序，依次发送，并且优先接收到广播的接受者，可以选择拦截广播，对广播进行修改，导致广播不再发送给下一个接受者。
+	4. 粘滞广播： StickBroadcast，这种广播，在android3.1后被系统标记为deprecated，这种广播是如果定义了接收器，但是在发送广播的时候，接收器所在进程还没有被实例化，则在接受者实例化之后，接收到最后一次发出来的粘滞广播。
+	5. 本地广播： LocalBroadcastManager。应用内广播。内部使用Handler实现。
 
+广播接受者的类型：
+按照使用方式，分为：
+	1. 静态注册：
+
+		```
+<receiver android:enabled=["true" | "false"]
+android:exported=["true" | "false"]
+android:icon="drawable resource"
+android:label="string resource"
+android:name="string"
+android:permission="string"
+android:process="string" >
+. . .
+</receiver>
+		```
+
+其中，需要注意的属性
+android:exported  ——此broadcastReceiver能否接收其他App的发出的广播，这个属性默认值有点意思，其默认值是由receiver中有无intent-filter决定的，如果有intent-filter，默认值为true，否则为false。（同样的，activity/service中的此属性默认值一样遵循此规则）同时，需要注意的是，这个值的设定是以application或者application user id为界的，而非进程为界（一个应用中可能含有多个进程）；
+android:name  —— 此broadcastReceiver类名；
+android:permission  ——如果设置，具有相应权限的广播发送方发送的广播才能被此broadcastReceiver所接收；
+android:process  ——broadcastReceiver运行所处的进程。默认为app的进程。可以指定独立的进程（Android四大基本组件都可以通过此属性指定自己的独立进程）
+
+
+4.不同注册方式的广播接收器回调onReceive(context, intent)中的context具体类型
+
+1).对于静态注册的ContextReceiver，回调onReceive(context, intent)中的context具体指的是ReceiverRestrictedContext；
+
+2).对于全局广播的动态注册的ContextReceiver，回调onReceive(context, intent)中的context具体指的是Activity Context；
+
+3).对于通过LocalBroadcastManager动态注册的ContextReceiver，回调onReceive(context, intent)中的context具体指的是Application Context。
+
+注：对于LocalBroadcastManager方式发送的应用内广播，只能通过LocalBroadcastManager动态注册的ContextReceiver才有可能接收到（静态注册或其他方式动态注册的ContextReceiver是接收不到的）。
+
+参考：
+https://www.cnblogs.com/lwbqqyumidi/p/4168017.html
+
+
+	2. 动态注册:
 2.Broadcast ANR
-
+由于广播接收者的onReceive方法都是在主线程，所以如果在onReceive方法中有耗时操作，会导致应用ANR。尤其是`动态注册的广播`，属于是前台广播，使用的context对象是具体的ActivityContext，所以尤为要注意。
 
 ## ContentProvider
-1. ContentProvider中使用的Context
+1. ContentProvider中使用的Context，
 
 2. ContentProvider的生命周期
+ContentProvider主要是为程序提供统一的数据访问接口，隐藏了数据存储的细节，数据可以是存储在内存，外部文件，数据库，以及网络中的数据，访问端只需要知道provider的uri以及访问权限，就可以以统一的方式访问本应用，以及跨应用访问数据。而不需要考虑其他所有问题。
+
+参考：
+https://www.jianshu.com/p/c70ae80cf64d
+
+ContentProvider的线程：ContentProvider的onCreate方法是运行在主线程，使用的Context是Application的mainThread，所以要注意不要做耗时操作，如果使用数据库，也尽量不要在这个方法里面去调用getReadableDatabase或者是getWriteableDatabase方法（耗时），参考：
+
+`
+/**
+     * Implement this to initialize your content provider on startup.
+     * This method is called for all registered content providers on the
+     * application main thread at application launch time.  It must not perform
+     * lengthy operations, or application startup will be delayed.
+     *
+     * <p>You should defer nontrivial initialization (such as opening,
+     * upgrading, and scanning databases) until the content provider is used
+     * (via {@link #query}, {@link #insert}, etc).  Deferred initialization
+     * keeps application startup fast, avoids unnecessary work if the provider
+     * turns out not to be needed, and stops database errors (such as a full
+     * disk) from halting application launch.
+     *
+     * <p>If you use SQLite, {@link android.database.sqlite.SQLiteOpenHelper}
+     * is a helpful utility class that makes it easy to manage databases,
+     * and will automatically defer opening until first use.  If you do use
+     * SQLiteOpenHelper, make sure to avoid calling
+     * {@link android.database.sqlite.SQLiteOpenHelper#getReadableDatabase} or
+     * {@link android.database.sqlite.SQLiteOpenHelper#getWritableDatabase}
+     * from this method.  (Instead, override
+     * {@link android.database.sqlite.SQLiteOpenHelper#onOpen} to initialize the
+     * database when it is first opened.)
+     *
+     * @return true if the provider was successfully loaded, false otherwise
+	   public abstract boolean onCreate();
+`
+
+一个应用中，在使用Binder通信的时候，最多有16个Binder线程位于Binder的线程池中，顾最多有16个调用ContentResolver的进程（线程）。可通过实验验证。
+
+
+
+
 
 
 ## Android 常用的系统服务
@@ -350,8 +597,207 @@ SparseArray，IntSparseArray等
 ## Android 跨进程通信的其他方式
 
 ## Android 系统启动流程分析
+首先，系统系统是从system/core/init程序进入的，init程序，加载各种init.rc，对各种底层驱动服务进行初始化操作，系统启动的第一个应用是system_server是从加载init.zegote_xx.rc中定义的
+```
+service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+    class main
+    priority -20
+    user root
+    group root readproc
+    socket zygote stream 660 root system
+    onrestart write /sys/android_power/request_state wake
+    onrestart write /sys/power/state on
+    onrestart restart audioserver
+    onrestart restart cameraserver
+    onrestart restart media
+    onrestart restart netd
+    onrestart restart wificond
+    writepid /dev/cpuset/foreground/tasks
+
+```
+
+调用后的代码位于frameworks/base/cmds/app_process/app_main.cpp，编译成的shell脚本，执行的方法如下：
+
+```
+int main(int argc, char* const argv[])
+{
+    ...
+    //AppRuntime定义于app_main.cpp中，继承自AndroidRuntime
+    AppRuntime runtime(argv[0], computeArgBlockSize(argc, argv));
+    // Process command line arguments
+    // ignore argv[0]
+    argc--;
+    argv++;
+    ...
+    // Parse runtime arguments. Stop at first unrecognized option.
+    // 通过app_main可以启动zygote、system-server及普通apk进程
+    // 这个可以通过init.rc来配置
+    bool zygote = false;
+    bool startSystemServer = false;
+    bool application = false;
+    // app_process的名称改为zygote
+    String8 niceName;
+    // 启动apk进程时，对应的类名
+    String8 className;
+
+    ++i;  // Skip unused "parent dir" argument.
+    //开始解析输入参数
+    while (i < argc) {
+        const char* arg = argv[i++];
+        if (strcmp(arg, "--zygote") == 0) {
+            //init.zygote32.rc中定义了该字段，表示启动zygote进程
+            zygote = true;
+            //记录app_process进程名的nice name，即zygote32(平台相关)
+            niceName = ZYGOTE_NICE_NAME;
+        } else if (strcmp(arg, "--start-system-server") == 0) {
+            //init.zygote.rc中定义了该字段， 启动zygote后会启动system-server
+            startSystemServer = true;
+        } else if (strcmp(arg, "--application") == 0) {
+            //表示启动制定进程
+            application = true;
+        } else if (strncmp(arg, "--nice-name=", 12) == 0) {
+            //可以自己指定进程名
+            niceName.setTo(arg + 12);
+        } else if (strncmp(arg, "--", 2) != 0) {
+            //与--application配置，启动指定的类
+            className.setTo(arg);
+            break;
+        } else {
+            --i;
+            break;
+        }
+    }
+    //准备参数
+    Vector<String8> args;
+    if (!className.isEmpty()) {
+        //启动普通进程
+        // We're not in zygote mode, the only argument we need to pass
+        // to RuntimeInit is the application argument.
+        //
+        // The Remainder of args get passed to startup class main(). Make
+        // copies of them before we overwrite them with the process name.
+        args.add(application ? String8("application") : String8("tool"));
+        runtime.setClassNameAndArgs(className, argc - i, argv + i);
+
+        if (!LOG_NDEBUG) {
+          String8 restOfArgs;
+          char* const* argv_new = argv + i;
+          int argc_new = argc - i;
+          for (int k = 0; k < argc_new; ++k) {
+            restOfArgs.append("\"");
+            restOfArgs.append(argv_new[k]);
+            restOfArgs.append("\" ");
+          }
+          ALOGV("Class name = %s, args = %s", className.string(), restOfArgs.string());
+        }
+    } else {
+        //创建dalvikCache所需的目录，并定义权限
+        // We're in zygote mode.
+        maybeCreateDalvikCache();
+
+        if (startSystemServer) {
+            //增加参数, 默认启动zygote后，就会启动system server
+            args.add(String8("start-system-server"));
+        }
+        //获取平台对应的abi信息
+        char prop[PROP_VALUE_MAX];
+        if (property_get(ABI_LIST_PROPERTY, prop, NULL) == 0) {
+            LOG_ALWAYS_FATAL("app_process: Unable to determine ABI list from property %s.",
+                ABI_LIST_PROPERTY);
+            return 11;
+        }
+        //参数需要制定abi
+        String8 abiFlag("--abi-list=");
+        abiFlag.append(prop);
+        args.add(abiFlag);
+
+        // In zygote mode, pass all remaining arguments to the zygote
+        // main() method.
+        for (; i < argc; ++i) {
+            //将main函数未处理的参数都递交给zygote main处理
+            args.add(String8(argv[i]));
+        }
+    }
+
+    if (!niceName.isEmpty()) {
+        //将app_process的进程名，替换为nice name
+        runtime.setArgv0(niceName.string(), true /* setProcName */);
+    }
+
+    if (zygote) {
+        //调用Runtime的start函数, 启动ZygoteInit
+        runtime.start("com.android.internal.os.ZygoteInit", args, zygote);
+    } else if (className) {
+        //启动zygote没有进入这个分支
+        //但这个分支说明，通过配置init.rc文件，其实是可以不通过zygote来启动一个进程
+        runtime.start("com.android.internal.os.RuntimeInit", args, zygote);
+    } else {
+        fprintf(stderr, "Error: no class name or --zygote supplied.\n");
+        app_usage();
+        LOG_ALWAYS_FATAL("app_process: no class name or --zygote supplied.");
+    }
+}
+```
+system/core/init
+```
+init.cpp
+init.rc
+service.cpp
+builtins.cpp
+frameworks/base/cmds/app_process/app_main.cpp
+frameworks/base/core/jni/AndroidRuntime.cpp
+frameworks/base/core/java/com/android/internal/os/ZygoteInit.java
+ZygoteServer.java
+Zygote.java
+```
+
+流程如下：
+
+1. 解析init.zygote.rc中的参数，创建AppRuntime并调用AppRuntime.start()方法；
+2. 调用AndroidRuntime的startVM()方法创建虚拟机，再调用startReg()注册JNI函数；
+3. 通过JNI方式调用ZygoteInit.main()，第一次进入Java世界；
+4. registerZygoteSocket()建立socket通道，zygote作为通信的服务端，用于响应客户端请求；
+5. preload()预加载通用类、drawable和color资源、openGL以及共享库以及WebView，用于提高app启动效率；
+6. zygote完毕大部分工作，接下来再通过forkSystemServer()，fork得力帮手system_server进程，也是上层framework的运行载体。
+7. zygote功成身退，调用runSelectLoop()，随时待命，当接收到请求创建新进程请求时立即唤醒并执行相应工作。
+
+
+SystemServer分析：
+SystemServer是第一个运行的java程序
+其中主要业务流程如下：
+1. 各种准备工作，启动navtive系统服务
+2. 声明一个SystemContext，其中会初始化ActivityThread，ActivityThread会初始化ApplicationThread，并实例化Application，调用Applicaiton的onCreate方法。
+3. 如果是system_server服务，会实例化SystemServiceManager
+4.启动各种系统服务，其中包括：
+	4.1 启动binder线程池，这是SystemServer与其他进程通信的基础
+	初始化Looper
+	创建了SystemServiceManager对象，它会启动Android中的各种服务。包括AMS、PMS、WMS
+	启动桌面进程，这样才能让用户见到手机的界面。
+	开启loop循环，开启消息循环，SystemServer进程一直运行，保障其他应用程序的正常运行。
+
+5. 各种准备活动结束后，回调ams的systemReady方法，ams的systemReady执行完后会自动调用startHomeActivityLocked（），启动Launcher。
+
+
+
 
 ## Android 应用启动分析
+一般来说，冷启动包括了以下内容：
+
+启动进程
+点击图标发生在Launcher应用的进程，startActivity()函数最终是由Instrumentation通过Android的Binder跨进程通信机制 发送消息给 system_server 进程；
+在 system_server 中，启动进程的操作由ActivityManagerService 通过 socket 通信告知 Zygote 进程 fork 子进程（app进程）
+开启主线程
+app 进程启动后，首先是实例化 ActivityThread，并执行其main()函数：创建 ApplicationThread，Looper，Handler 对象，并开启主线程消息循环Looper.loop()。
+创建并初始化 Application和Activity
+ActivityThread的main()调用 ActivityThread#attach(false)方法进行 Binder 通信，通知system_server进程执行 ActivityManagerService#attachApplication(mAppThread)方法，用于初始化Application和Activity。
+在system_server进程中，ActivityManagerService#attachApplication(mAppThread)里依次初始化了Application和Activity，分别有2个关键函数：
+- thread#bindApplication()方法通知主线程Handler 创建 Application 对象、绑定 Context 、执行 Application#onCreate() 生命周期
+- mStackSupervisor#attachApplicationLocked()方法中调用 ActivityThread#ApplicationThread#scheduleLaunchActivity()方法，进而通过主线程Handler消息通知创建 Activity 对象，然后再调用 mInstrumentation#callActivityOnCreate()执行 Activity#onCreate() 生命周期
+布局&绘制
+源码流程可以参考Android View 的绘制流程分析及其源码调用追踪
+
+至此，应用启动流程完成。
+
 
 ## Android （JVM虚拟机）内存泄露的原理
 
@@ -383,12 +829,19 @@ Binder被占满导致主线程无法和SystemServer通信
 主线程被本进程的其他子线程所blocked;
 问题出在远端进程(一般是binder call或socket等通信方式)
 
-
-## Android 输入事件的产生和传递机制分析
-
 ##　Android apk打包流程分析和apk的签名机制
+打包流程：
+https://juejin.cn/post/6844903850453762055
 
 ## Android 中View的底层绘制原理Chaerographer和SurfaceFlinger
+1. ActivityThread handleLaunchActivity() -> performLaunchActivity 创建Activity对象，执行Activity的attch ，初始化PhoneWindow，调用Activity的onCreate方法，初始化DecorView，并且添加布局到DecorView的content，执行Activity#onStart方法， 
+2. handleResumeActivity 调用 Activity的onResume方法，并添加DecorView到WindowManager中去，这会调用
+WindowManager的本地实现类WindowManagerImpl->addView,回调到WindowManagerGlobal->addView,最后会调动ViewRootImpl的setView方法。然后回调ViewRootImpl的requestLayout
+
+3.ViewRootImpl  performTraversal， 对整个viewTree进行measure,layout,draw.通过Charographer。
+
+
+https://www.jianshu.com/p/d3be5def8398
 
 ## Android 丢帧 冻帧 和帧率优化相关知识分析
 
@@ -397,6 +850,8 @@ Binder被占满导致主线程无法和SystemServer通信
 ## Android 编译系统相关知识 make .mk,.bp ，Aosp库各个目录的作用。以及主要版本的演进Android5.1，Android 6.0,Android 8.0,Android 9.0
 
 ## Android selinux 相关知识 sepolicy的定义，生成。
+
+
 
 ## Android 内存优化相关内容
 内存优化，常常和卡顿联系在一起，在用户看来，应用使用起来常常卡顿，UI不流畅，是内存不足的最直观的体现，因此，对内存的优化，常常和UI卡顿的优化放在一起讨论。
@@ -593,7 +1048,7 @@ I/O 优化对提升应用的体验非常有用，希望上面所讲的内容对�
 应用启动时间统计：
 `adb shell am start -W componenetName/Action`
 3. 温启动： 
-温启动包含了在冷启动期间发生的部分操作；同时，它的开销要比热启动高。有许多潜在状态可视为温启动。例如：
+温启动包含���在冷启动期间发生的部分操作；同时，它的开销要比热启动高。有许多潜在状态可视为温启动。例如：
 
 用户在退出应用后又重新启动应用。进程可能已继续运行，但应用必须通过调用 onCreate() 从头开始重新创建 Activity。
 系统将您的应用从内存中逐出，然后用户又重新启动它。进程和 Activity 需要重启，但传递到 onCreate() 的已保存的实例 state bundle 对于完成此任务有一定助益。
@@ -659,33 +1114,101 @@ onPause() –> onSaveInstanceState() –> onStop()
 
 ## HTTPS 加密方式（对称加密，非对称加密）
 
+对称加密： Aes， des加密， 同一个秘钥，加密解密都用它
+
+非对称加密： 公钥，私钥，客户端只持有公钥，加密数据后，服务端用私钥解密，
+
+非对称加密：时间长，数据量小，泄露后历史数据都可以解密
+
+对称加密： 容易破解，时间短，数据量大。
+
+
+
 ## HTTP 协议详解，Head Body分析
 
 
 
 # 虚拟机相关
+1. Java虚拟机加载类模型
+http://qiushao.net/2020/02/18/Java/Java-%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D/
+
+
 
 ## JVM虚拟机的内存模型	
 
+
 ## Android虚拟机（Dalvik,art）虚拟机内存模型和特点
 
-## Android 应用 启动流程虚拟机流程分析
+art虚拟机：
+1.在堆上做了区分，将堆内存分成了 图像堆， 数组堆
 
-## Android 虚拟机的垃圾回收机制
+## Android 虚拟机的垃圾回收机制(GC)
+
+综述 jvm gc和delvik ，art虚拟机gc的区别：https://zhuanlan.zhihu.com/p/24835977
+官方文档： https://source.android.google.cn/devices/tech/dalvik/gc-debug?hl=zh-cn
+
+###　JVM 内存回收算法：
+
+1. 标记-清除
+2. 复制
+3. 标记-压缩
+4. 分代
 
 
+### GC指标：
 
+这里的几个概念，分别是Java堆的起始大小（Starting Size）、最大值（Maximum Size）和增长上限值（Growth Limit）。
+在启动Dalvik虚拟机的时候，我们可以分别通过-Xms、-Xmx和-XX:HeapGrowthLimit三个选项来指定上述三个值，以上三个值分别表示表示如下.
 
+1. Starting Size : Dalvik虚拟机启动的时候，会先分配一块初始的堆内存给虚拟机使用。
+
+2. Growth Limit:是系统给每一个程序的最大堆上限,超过这个上限，程序就会OOM
+
+3. Maximum Size：不受控情况下的最大堆内存大小，起始就是我们在用largeheap属性的时候，可以从系统获取的最大堆大小
+
+同时除了上面的这个三个指标外，还有几个指标也是值得我们关注的，那就是堆最小空闲值（Min Free）、堆最大空闲值（Max Free）和堆目标利用率（Target Utilization）。假设在某一次GC之后，存活对象占用内存的大小为LiveSize，那么这时候堆的理想大小应该为(LiveSize / U)。但是(LiveSize / U)必须大于等于(LiveSize + MinFree)并且小于等于(LiveSize + MaxFree)，每次GC后垃圾回收器都会尽量让堆的利用率往目标利用率靠拢。所以当我们尝试手动去生成一些几百K的对象，试图去扩大可用堆大小的时候，反而会导致频繁的GC，因为这些对象的分配会导致GC，而GC后会让堆内存回到合适的比例，而我们使用的局部变量很快会被回收理论上存活对象还是那么多，我们的堆大小也会缩减回来无法达到扩充的目的。 与此同时这也是产生CONCURRENT GC的一个因素，后文我们会详细讲到。
+
+### GC类型：
+
+GC_FOR_MALLOC: 表示是在堆上分配对象时内存不足触发的GC。
+GC_CONCURRENT: 当我们应用程序的堆内存达到一定量，或者可以理解为快要满的时候，系统会自动触发GC操作来释放内存。
+GC_EXPLICIT: 表示是应用程序调用System.gc、VMRuntime.gc接口或者收到SIGUSR1信号时触发的GC。
+GC_BEFORE_OOM: 表示是在准备抛OOM异常之前进行的最后努力而触发的GC。
+实际上，GC_FOR_MALLOC、GC_CONCURRENT和GC_BEFORE_OOM三种类型的GC都是在分配对象的过程触发的。而并发和非并发GC的区别主要在于前者在GC过程中，有条件地挂起和唤醒非GC线程，而后者在执行GC的过程中，一直都是挂起非GC线程的。并行GC通过有条件地挂起和唤醒非GC线程，就可以使得应用程序获得更好的响应性。但是同时并行GC需要多执行一次标记根集对象以及递归标记那些在GC过程被访问了的对象的操作，所以也需要花费更多的CPU资源。后文在Art的并发和非并发GC中我们也会着重说明下这两者的区别。
+
+### 回收算法和碎片
+由于主流的虚拟机都是实现的（标记－清除）的算法，所以会有内存碎片产生，使用复制算法会避免内存碎片，但是复制算法由于用到两块内存，所以把可用内存缩减了一半。
+
+### ART内存回收机制
+ART在delvik虚拟机基础上做出了很多优化，包括
+１．ART运行时内部使用的Java堆的主要组成包括Image Space、Zygote Space、Allocation Space和Large Object Space四个Space，Image Space用来存在一些预加载的类， Zygote Space和Allocation Space与Dalvik虚拟机垃圾收集机制中的Zygote堆和Active堆的作用是一样的。Large Object Space就是一些离散地址的集合，用来分配一些大对象从而提高了GC的管理效率和整体性能，类似如下图：
+
+2 GC的类型
+kGcCauseForAlloc ，当要分配内存的时候发现内存不够的情况下引起的GC，这种情况下的GC会stop world
+kGcCauseBackground，当内存达到一定的阀值的时候会去出发GC，这个时候是一个后台gc，不会引起stop world
+kGcCauseExplicit，显示调用的时候进行的gc，如果art打开了这个选项的情况下，在system.gc的时候会进行gc
+其他更多
+
+３．Art在GC上不像Dalvik仅有一种回收算法，Art在不同的情况下会选择不同的回收算法，比如Alloc内存不够的时候会采用非并发GC，而在Alloc后发现内存达到一定阀值的时候又会触发并发GC。同时在前后台的情况下GC策略也不尽相同，后面我们会一一给大家说明。
 
 
 # 设计模式
 
 ## 单例模式
+构造函数private， 懒汉式，饿汉式，懒汉需要注意多线程加锁。
+
+方式：
+1. 私有构造函数，加懒汉式
+2. 通过静态内部类中的静态变量
+3. 通过枚举函数（不需要加锁，只有方法没有变量的单例）
+4. 通过Java的Singleton父类。
+
 ## 观察者模式
 ## 工厂模式，简单工厂
 ## 装饰器模式	
 ## 建造者模式
 ## 策略模式
+
 ## 适配器模式
 ## 代理模式
 ## 模板模式
@@ -696,8 +1219,6 @@ onPause() –> onSaveInstanceState() –> onStop()
 ## 责任链模式
 
 ## 设计模式的几大原则
-### 开闭原则
-### 迪米特法则
 
 
 
