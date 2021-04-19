@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"haijiaogao.github.io","root":"/blogs/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Android 基础知识复习ActivityActivity生命周期 Activity A 启动另一个Activity B，回调如下:Activity A 的onPause() → Activity B的onCreate() → onStart() → onResume() → Activity A的onStop()；如果B是透明主题又或则是个DialogActivity，则不会回调A的onSto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Knowledge&amp;Interview">
+<meta property="og:url" content="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/">
+<meta property="og:site_name" content="Haijiao&#39;s Notes">
+<meta property="og:description" content="Android 基础知识复习ActivityActivity生命周期 Activity A 启动另一个Activity B，回调如下:Activity A 的onPause() → Activity B的onCreate() → onStart() → onResume() → Activity A的onStop()；如果B是透明主题又或则是个DialogActivity，则不会回调A的onSto">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://camo.githubusercontent.com/908f0c391fd50377aebbb3c0fd1a0c4419007c0eecb7651a1908be8e273a46ab/687474703a2f2f6769747975616e2e636f6d2f696d616765732f6c6966656379636c652f61637469766974792e706e67">
+<meta property="og:image" content="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/images/interview/image/io1.webp">
+<meta property="og:image" content="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/images/interview/image/io2.webp">
+<meta property="og:image" content="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/images/interview/image/io3.webp">
+<meta property="og:image" content="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/images/interview/image/io4.webp">
+<meta property="article:published_time" content="2021-02-23T11:14:11.787Z">
+<meta property="article:modified_time" content="2021-03-03T07:04:04.004Z">
+<meta property="article:author" content="Gaohaijiao">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://camo.githubusercontent.com/908f0c391fd50377aebbb3c0fd1a0c4419007c0eecb7651a1908be8e273a46ab/687474703a2f2f6769747975616e2e636f6d2f696d616765732f6c6966656379636c652f61637469766974792e706e67">
+
+<link rel="canonical" href="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Android Knowledge&Interview | Haijiao's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/blogs/atom.xml" title="Haijiao's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Haijiao's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">生活杂谈|技术随想</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/blogs/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haijiaogao.github.io/blogs/2021/02/23/Android-Knowledge-Interview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Gaohaijiao">
+      <meta itemprop="description" content="成年人的世界，没有容易二字">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Haijiao's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Knowledge&Interview
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-23 19:14:11" itemprop="dateCreated datePublished" datetime="2021-02-23T19:14:11+08:00">2021-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-03 15:04:04" itemprop="dateModified" datetime="2021-03-03T15:04:04+08:00">2021-03-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Android-基础知识复习"><a href="#Android-基础知识复习" class="headerlink" title="Android 基础知识复习"></a>Android 基础知识复习</h1><h2 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h2><h3 id="Activity生命周期"><a href="#Activity生命周期" class="headerlink" title="Activity生命周期"></a>Activity生命周期</h3><p><img src="https://camo.githubusercontent.com/908f0c391fd50377aebbb3c0fd1a0c4419007c0eecb7651a1908be8e273a46ab/687474703a2f2f6769747975616e2e636f6d2f696d616765732f6c6966656379636c652f61637469766974792e706e67" alt="image"></p>
+<p>Activity A 启动另一个Activity B，回调如下:<br>Activity A 的onPause() → Activity B的onCreate() → onStart() → onResume() → Activity A的onStop()；如果B是透明主题又或则是个DialogActivity，则不会回调A的onStop；</p>
+<h3 id="Activity的启动模式和Android的任务栈分析"><a href="#Activity的启动模式和Android的任务栈分析" class="headerlink" title="Activity的启动模式和Android的任务栈分析"></a>Activity的启动模式和Android的任务栈分析</h3><h4 id="四种启动模式：Standard，SingleTop，SingleTask-SingleInstance"><a href="#四种启动模式：Standard，SingleTop，SingleTask-SingleInstance" class="headerlink" title="四种启动模式：Standard，SingleTop，SingleTask,SingleInstance"></a>四种启动模式：Standard，SingleTop，SingleTask,SingleInstance</h4><ol>
+<li>Standard: 默认启动模式当目标Activity在AndroidManifest中为Standard类型时，不管当前的任务栈中是否已经存在该Activity的实例，都重新生成一个Activity的实例，并推入任务栈栈顶。</li>
+<li>SingleTop: 当目标Activity被声明为SingleTop时，如目标不存在，则新建一个activity放在栈顶；如果目标已经存在，并且非处于任务栈顶，则重新生成一个目标Activity放在栈顶；如果目标已经存在，并处于栈顶，则调用该Activity的onNewIntent方法。</li>
+<li>SingleTask: 当目标Activity被声明为SingleTask的时候，如果说目标不存在，则新建一个Activity放在栈顶，并且新建一个目标Activity放在栈中；如果目标存在于当前栈中，则将当前栈中位于目标之上的Activity全部都出栈并销毁（onDestory方法会调用），并调用目标Activity的onNewIntent方法。</li>
+<li>SingleInstance： 当目标Activity被声明为SingleInstance的时候，如果说目标不存在，则新建一个Task，并把新建的目标Activity压入栈中；singleInstance的Activity始终单独使用一个任务栈；如果目标存在，则调用该Activity的onNewIntent方法。<br>注意：<br>因为 singleInstance 的属性是禁止与其他 Activities 共享任务栈，所以启动模式为 SingleInstance 的 Activity 启动其他 Activity 时会默认带有 FLAG_ACTIVITY_NEW_TASK 属性。所以从一个launchMode为singleInstance的activity中新启动一个启动模式为Standard的 Activity F 后， Activity F会被推到SingleInstance之前的那个标准任务栈的栈顶。</li>
+</ol>
+<h4 id="taskAffinity"><a href="#taskAffinity" class="headerlink" title="taskAffinity"></a>taskAffinity</h4><p>什么是affinity？<br>　　affinity是指Activity的归属，Activity与Task的吸附关系，也就是该Activity属于哪个Task。一般情况下在同一个应用中，启动的Activity都在同一个Task中，它们在该Task中度过自己的生命。每个Activity都有taskAffinity属性，这个属性指出了它希望进入的Task。如果一个Activity没有显式的指明taskAffinity，那么它的这个属性就等于Application指明的taskAffinity，如果Application也没有指明，那么该taskAffinity的值就等于应用的包名。我们可以通过在元素中增加taskAffinity属性来为某一个Activity指定单独的affinity。这个属性的值是一个字符串，可以指定为任意字符串，但是必须至少包含一个”.”，否则会报错。</p>
+<p>affinity在什么场合应用呢？<br>1.根据affinity重新为Activity选择宿主task（与allowTaskReparenting属性配合使用）<br>　　allowTaskReparenting用来标记Activity能否从启动的Task移动到taskAffinity指定的Task，当把Activity的allowTaskReparenting属性设置成true时，Activity就拥有了一个转移所在Task的能力。具体点来说，就是一个Activity现在是处于某个Task当中的，但是它与另外一个Task具有相同的affinity值，那么当另外这个任务切换到前台的时候，该Activity就可以转移到现在的这个任务当中。allowTaskReparenting默认是继承至application中的allowTaskReparenting=false，如果为true，则表示可以更换；false表示不可以。<br>　　举一个形象点的例子，比如有一个天气预报程序，它有一个用于显示天气信息的Activity，allowTaskReparenting属性设置成true，这个Activity和天气预报程序的所有其它Activity具体相同的affinity值。这个时候，你自己的应用程序通过Intent去启动了这个用于显示天气信息的Activity，那么此时这个Activity应该是和你的应用程序是在同一个任务当中的。但是当把天气预报程序切换到前台的时候，这个Activity会被转移到天气预报程序的任务当中，并显示出来。如果将你自己的应用切换到前台，发现你自己应用Task里的那个Activity消失了。</p>
+<p>2.启动一个Activity过程中Intent使用了FLAG_ACTIVITY_NEW_TASK标记，根据affinity查找或创建一个新的具有对应affinity的task。<br>　　当调用startActivity()方法来启动一个Activity时，默认是将它放入到当前的任务当中。但是，如果在Intent中加入了FLAG_ACTIVITY_NEW_TASK flag的话，情况就会变的复杂起来。首先，系统会去检查这个Activity的affinity是否与当前Task的affinity相同。如果相同的话就会把它放入到当前Task当中，如果不同则会先去检查是否已经有一个名字与该Activity的affinity相同的Task,如果有，这个Task将被调到前台，同时这个Activity将显示在这个Task的顶端；如果没有的话，系统将会尝试为这个Activity创建一个新的Task。需要注意的是，如果一个Activity在manifest文件中声明的启动模式是”singleTask”，那么他被启动的时候，行为模式会和前面提到的指定FLAG_ACTIVITY_NEW_TASK一样。<br>　　那么，有了上面的知识，我们应该可以实现开头提到的功能了。</p>
+<h4 id="IntentFlags"><a href="#IntentFlags" class="headerlink" title="IntentFlags"></a>IntentFlags</h4><p> FLAG_ACTIVITY_BROUGHT_TO_FRONT</p>
+<p>        比方说我现在有Ａ，在Ａ中启动Ｂ，在Ａ中Intent中加上这个标记。此时B就是以FLAG_ACTIVITY_BROUGHT_TO_FRONT 这个启动的，在B中再启动C，D（正常启动C，D），如果这个时候在D中再启动B，这个时候最后的栈的情况是 A,C,D,B。</p>
+<p>FLAG_ACTIVITY_REORDER_TO_FRONT</p>
+<p>        如果在Intent中设置，并传递给Context.startActivity()，这个标志将引发已经运行的Activity移动到历史stack的顶端。 例如，假设一个Task由四个Activity组成：A，B，C，D。如果D调用startActivity()来启动Activity B，那么，B会移动到历史stack的顶端，现在的次序变成A，C，D，B。如果FLAG_ACTIVITY_CLEAR_TOP标志也设置的话，那么这个标志将被覆盖。</p>
+<p>FLAG_ACTIVITY_CLEAR_TASK</p>
+<p>        如果在调用startActivity时传递这个标记，该task栈中的其他activity会先被清空，然后该activity在该task中启动，也就是说，这个新启动的activity变为了这个空task的根activity。所有老的activity都结束掉。该标志必须和FLAG_ACTIVITY_NEW_TASK一起使用。</p>
+<p>FLAG_ACTIVITY_CLEAR_TOP</p>
+<p>        如果该activity已经在task中存在，并且设置了该task，系统不会启动新的 Activity 实例，会将task栈里该Activity之上的所有Activity一律结束掉，然后将Intent发给这个已存在的Activity。Activity收到 Intent之后，或者在onNewIntent()里做下一步的处理，或者自行结束然后重新创建。如 Activity 在 AndroidMainifest.xml 里将启动模式设置成默认standard模式，且 Intent 里也没有设置 FLAG_ACTIVITY_SINGLE_TOP，那么Activity将会结束并且重启；否则则会传递到onNewIntent方法。</p>
+<p>已经启动了四个Activity：A，B，C和D。在D Activity里，我们要跳到B Activity，同时希望C finish掉，可以在startActivity(intent)里的intent里添加flags标记，这样启动B Activity，就会把D，C都finished掉，如果你的B Activity的启动模式是默认的（multiple） ，则B Activity会finished掉，再启动一个新的Activity B。  如果不想重新再创建一个新的B Activity，则可在启动Intent添加flag FLAG_ACTIVITY_SINGLE_TOP。</p>
+<p>        可以利用此特性来退出程序，假设A为程序入口，将A的Manifest.xml配置成android:launchMode=”singleTop”，通过此flag来启动A，同时在A的onNewIntent中判断来结束自己，可到退出的效果。FLAG_ACTIVITY_CLEAR_TOP 还可以和 FLAG_ACTIVITY_NEW_TASK 配合使用，用来启动一个task栈的根activity，他将会把该栈清空为根状态，比如从notification manager启动activity。</p>
+<p>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</p>
+<p>        设置完之后，新的activity将不会添加到当前activity列表中，当某些情况下我们不希望用户通过历史列表回到我们的Activity的时候这个标记比较有用。他等同于在XML中指定Activity的属性android:excludeFromRecents=”true”</p>
+<p>FLAG_ACTIVITY_FORWARD_RESULT</p>
+<p>        如果A需要onActivityResult中获取返回结果，startActivityForResult B，而B只是过渡页，启动C之后就finish掉了，需要在 C 中setResult返回给A就可以用到这个标志。</p>
+<p>A -&gt; B -&gt; XXXXX(无论多少个过渡页) 设置 FLAG_ACTIVITY_FORWARD_RESULT 来启动 C ，之后该XXX过渡页finish - &gt; C ，那么C的结果返回给A。</p>
+<p>FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY</p>
+<p>        如果设置，新的Activity将不再历史stack中保留。用户一离开它，这个Activity就关闭了。例如A启动B的时候，给B设置了FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY，那么：</p>
+<p>A -&gt; B -&gt; C ，启动C 就算 B没有自行finish ，也会变为 AC</p>
+<p>FLAG_ACTIVITY_MULTIPLE_TASK</p>
+<p>        这个标识用来创建一个新的task栈，并且在里面启动新的activity（所有情况，不管系统中存在不存在该activity实例），经常和FLAG_ACTIVITY_NEW_DOCUMENT或者FLAG_ACTIVITY_NEW_TASK一起使用。这上面两种使用场景下，如果没有带上FLAG_ACTIVITY_MULTIPLE_TASK标识，他们都会使系统搜索存在的task栈，去寻找匹配intent的一个activity，如果没有找到就会去新建一个task栈；但是当和FLAG_ACTIVITY_MULTIPLE_TASK一起使用的时候，这两种场景都会跳过搜索这步操作无条件的创建一个新的task。和FLAG_ACTIVITY_NEW_TASK一起使用需要注意，尽量不要使用该组合除非你完成了自己的顶部应用启动器，他们的组合使用会禁用已经存在的task栈回到前台的功能。</p>
+<p>FLAG_ACTIVITY_NEW_DOCUMENT</p>
+<p>        api 21之后加入的一个标识，用来在intent启动的activity的task栈中打开一个document，和documentLaunchMode效果相等，有着不同的documents的activity的多个实例，将会出现在最近的task列表中。</p>
+<p>documentLaunchMode可以设置4个值</p>
+<p>intoExisting： activity 会为该document请求一个已经存在的task，这与设置FLAG_ACTIVITY_NEW_DOCUMENT且不设置FLAG_ACTIVITY_MULTIPLE_TASK 有相同的效果。</p>
+<p>always： activity 会为该document创建一个新的task，即使该document已经被打开了，这与设置 FLAG_ACTIVITY_NEW_DOCUMENT且设置 FLAG_ACTIVITY_MULTIPLE_TASK 有相同的效果。</p>
+<p>none：activity 不会为 document 创建新的task，该app被设置为 single task 的模式，它会重新调用用户唤醒的所有activity中的最近的一个。</p>
+<p>never：activity 不会为document创建一个新的task，设置这个值复写了 FLAG_ACTIVITY_NEW_DOCUMENT 和 FLAG_ACTIVITY_MULTIPLE_TASK 标签。如果其中一个标签被设置，并且overview screen 显示该app为 single task 模式。则该activity会重新调用用户最近唤醒的activity。</p>
+<p>注意： none 或 nerver 使用时，activity必须设置为 launchMode=”standard” ，如果该属性没有设置，documentLaunchMode=”none” 属性就会被使用。有</p>
+<p>FLAG_ACTIVITY_RETAIN_IN_RECENTS</p>
+<p>        api21加入。默认情况下通过FLAG_ACTIVITY_NEW_DOCUMENT启动的activity在关闭之后，task中的记录会相对应的删除。如果为了能够重新启动这个activity你想保留它，就可以使用者个flag，最近的记录将会保留在接口中以便用户去重新启动。接受该flag的activity可以使用autoRemoveFromRecents去复写这个request或者调用Activity.finishAndRemoveTask()方法。</p>
+<p>FLAG_ACTIVITY_NEW_TASK</p>
+<p>        设置此状态，记住以下原则，首先会查找是否存在和被启动的Activity具有相同的亲和性的任务栈（即taskAffinity，注意同一个应用程序中的activity的亲和性在没有修改的情况下是一样的，所以下面的a情况会在同一个栈中），如果有，刚直接把这个栈整体移动到前台，并保持栈中的状态不变，即栈中的activity顺序不变，如果没有，则新建一个栈来存放被启动的activity。</p>
+<p>a. 前提: Activity A和Activity B在同一个应用中。</p>
+<p>操作: Activity A启动开僻Task堆栈(堆栈状态：A)，在Activity A中启动Activity B， 启动Activity B的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK，Activity B被压入Activity A所在堆栈(堆栈状态：AB)。</p>
+<p>原因: 默认情况下同一个应用中的所有Activity拥有相同的关系(taskAffinity)。</p>
+<p>b. 前提: Activity A在名称为”TaskOne应用”的应用中， Activity C和Activity D在名称为”TaskTwo应用”的应用中。</p>
+<p>操作1:在Launcher中单击“TaskOne应用”图标，Activity A启动开僻Task堆栈，命名为TaskA(TaskA堆栈状态: A)，在Activity A中启动Activity C， 启动Activity C的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK，Android系统会为Activity C开僻一个新的Task，命名为TaskB(TaskB堆栈状态: C), 长按Home键，选择TaskA，Activity A回到前台, 再次启动Activity C（两种情况：1.从桌面启动；2.从Activity A启动，两种情况一样）， 这时TaskB回到前台, Activity C显示，供用户使用, 即：包含FLAG_ACTIVITY_NEW_TASK的Intent启动Activity的Task正在运行，则不会为该Activity创建新的Task，而是将原有的Task返回到前台显示。</p>
+<p>操作2:在Launcher中单击”TaskOne应用”图标，Activity A启动开僻Task堆栈，命名为TaskA(TaskA堆栈状态: A)，在Activity A中启动Activity C，启动Activity C的Intent的Flag设为FLAG_ACTIVITY_NEW_TASK，Android系统会为Activity C开僻一个新的Task，命名为TaskB(TaskB堆栈状态: C)， 在Activity C中启动Activity D(TaskB的状态: CD) 长按Home键， 选择TaskA，Activity A回到前台， 再次启动Activity C(从桌面或者ActivityA启动，也是一样的)，这时TaskB回到前台, Activity D显示，供用户使用。说明了在此种情况下设置FLAG_ACTIVITY_NEW_TASK后，会先查找是不是有Activity C存在的栈，根据亲和性(taskAffinity)，如果有，刚直接把这个栈整体移动到前台，并保持栈中的状态不变，即栈中的顺序不变。</p>
+<p>FLAG_ACTIVITY_NO_ANIMATION</p>
+<p>        启动的时候不执行动画。</p>
+<p>FLAG_ACTIVITY_NO_USER_ACTION</p>
+<p>        禁止activity调用onUserLeaveHint()函。onUserLeaveHint()作为activity周期的一部分，它在activity因为用户要跳转到别的activity而退到background时使用。比如，在用户按下Home键（用户的操作），它将被调用。比如有电话进来（不属于用户的操作），它就不会被调用。注意：通过调用finish()时该activity销毁时不会调用该函数。</p>
+<p>FLAG_ACTIVITY_PREVIOUS_IS_TOP</p>
+<p>        如果给Intent对象设置了这个标记，这个Intent对象被用于从一个存在的Activity中启动一个新的Activity，那么新的这个Activity不能用于接受发送给顶层activity的intent，这个新的activity的前一个activity被作为顶部activity。</p>
+<p>FLAG_ACTIVITY_TASK_ON_HOME</p>
+<p>        api11加入。把当前新启动的任务置于Home任务之上，也就是按back键从这个任务返回的时候会回到home，即使这个不是他们最后看见的activity，注意这个标记必须和FLAG_ACTIVITY_NEW_TASK一起使用。</p>
+<p>FLAG_EXCLUDE_STOPPED_PACKAGES和FLAG_INCLUDE_STOPPED_PACKAGES</p>
+<p>        从Android 3.1开始，给Intent定义了两个新的Flag，分别为FLAG_INCLUDE_STOPPED_PACKAGES和FLAG_EXCLUDE_STOPPED_PACKAGES，用来控制Intent是否要对处于停止状态的App起作用，顾名思义：</p>
+<p>FLAG_INCLUDE_STOPPED_PACKAGES：表示包含未启动的App</p>
+<p>FLAG_EXCLUDE_STOPPED_PACKAGES：表示不包含未启动的App</p>
+<p>值得注意的是，Android 3.1开始，系统向所有Intent的广播添加了FLAG_EXCLUDE_STOPPED_PACKAGES标志。这样做是为了防止广播无意或不必要地开启未启动App的后台服务。如果要强制调起未启动的App，后台服务或应用程序可以通过向广播Intent添加FLAG_INCLUDE_STOPPED_PACKAGES标志来唤醒。</p>
+<h3 id="常用Android-View的使用"><a href="#常用Android-View的使用" class="headerlink" title="常用Android View的使用"></a>常用Android View的使用</h3><ol>
+<li>Views（TextView,ImageView,EditText,Button,Switch,CheckBox,RadioGroup,RadioButton,ToggleButton,WebView,ProgressBar,SeekBar）</li>
+<li>ViewGroup(FrameLayout,RelativeLayout,ConstraintLayout,LinearLayout,GridLayout,ScrollView,ListView,TabHost)</li>
+</ol>
+<p>ConstraintLayout 优势：<br>    1). 所见即所得。易于在AndroidStudio中进行配置<br>    2). 和RelativeLayout一样，可以有效减少布局层数，从而降低绘制复杂度<br>    3). 和RelativeLayout相比，其布局方式更灵活，更容易适配多种机型。</p>
+<p>ConstraintLayout的使用分析：<br>各种属性的使用：<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/17ec9bd6ca8a">https://www.jianshu.com/p/17ec9bd6ca8a</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/38ee0aa654a8">https://www.jianshu.com/p/38ee0aa654a8</a></p>
+<p>ConstraintSet的使用：<br>ConstraintSet主要是方便在代码中修改ConstraintLayout的各种约束属性。<br>使用：<br><a target="_blank" rel="noopener" href="http://hulkyang.blogspot.com/2018/12/android-constraintlayout-constraintset.html">http://hulkyang.blogspot.com/2018/12/android-constraintlayout-constraintset.html</a></p>
+<h3 id="RecyclerView-使用"><a href="#RecyclerView-使用" class="headerlink" title="RecyclerView 使用"></a>RecyclerView 使用</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4f9591291365">https://www.jianshu.com/p/4f9591291365</a></p>
+<p>RecyclerView的特点：</p>
+<ol>
+<li>默认实现的多级缓存机制</li>
+<li>灵活的布局规则，有很强的可配置、可定制性，可实现多行多列，可多向滚动的List</li>
+<li>通过LayoutManager，Adapter，ViewHolder，实现了布局和逻辑的解耦</li>
+<li>可以局部刷新，并且可以通过ItemAnimation实现更丰富的动画效果</li>
+</ol>
+<p>RecyclerView的4级缓存机制：<br>RecylerView的多级缓存机制，是有RecyclerView中的内部类Recycler实现的。<br>其中最重要的方法：<br>getViewForPosition(int position)-&gt;getViewForPosition(int position, boolean dryRun) -&gt; tryGetViewHolderForPositionByDeadline(int position,<br>                boolean dryRun, long deadlineNs) </p>
+<p>核心逻辑实现于tryGetViewHolderForPositionByDeadline中，其中从上个方法传递过来的参数中的dealineNs为Int.MaxValue.</p>
+<p>第一步：判断是否处于isPreLayout状态，这个状态值只有在执行item动画的时候才会为true。如果是的话，则调用getChangedScrapViewForPosition（）方法获取viewHolder并返回</p>
+<p>第二歩(核心步骤)：在isPreLayout=false的情况下，正常获取一个ViewHolder，需要先按照位置从scrap或者是hiden的或者是cachedView中找。如果说没有找到的话，就按照id和itemType在scrap和缓存中找；如果说没有找到合适的VH，那就判定是否有mViewCacheExtension的定义，有就从mViewCacheExtension中根据position和type找；如果还是没有找到合适的VH，下一个步骤就是在recyclerPool中根据type找</p>
+<p>第三歩：如果都没有找到缓存的VH，则需要通过createViewHolder回调Adapter中的方法，进行创建ViewHolder。如果说缓存的VH的话判断是否需要绑定，需要的话就调用onBindViewHolder方法</p>
+<h3 id="View-触摸事件传递机制"><a href="#View-触摸事件传递机制" class="headerlink" title="View 触摸事件传递机制"></a>View 触摸事件传递机制</h3><p>在应用中传递顺序：</p>
+<blockquote>
+<ol>
+<li>Activity  dispatchTouchEvent</li>
+</ol>
+</blockquote>
+<pre><code>            | </code></pre>
+<blockquote>
+<ol start="2">
+<li>PhoneWindow的superDispatchTouchEvent()方法</li>
+</ol>
+</blockquote>
+<pre><code>            |</code></pre>
+<blockquote>
+<ol start="3">
+<li>DocerView的superDispatchTouchEvent()方法 调用super.dispatchTouchEvent</li>
+</ol>
+</blockquote>
+<pre><code>            |</code></pre>
+<blockquote>
+<ol start="4">
+<li>ViewGroup dispatchTouchEvent DocerView继承自ViewGroup，so调用ViewGroup的dispatch方法(划重点：该方法完成主要的传递逻辑)</li>
+</ol>
+</blockquote>
+<pre><code>            |</code></pre>
+<blockquote>
+<ol start="5">
+<li>ViewGroup中首先交由自己的onInterpretTouchEvent进行处理，如果说onInterpretTouchEvent返回true，那么事件被自身拦截，不会继续向下传递。如果不处理，则交由合适的子View进行处理，如果子view仍然是viewGroup则继续按照规则向下分发。如果没有子view则交由自身的touchEvent处理，如果都返回的false。touch事件将不再继续向下分发，而回到上一级的ViewGroup</li>
+</ol>
+</blockquote>
+<pre><code>             |</code></pre>
+<blockquote>
+<ol start="6">
+<li>View 的dispatchTouchEvent中如果返回true，则交由该View进行处理，如果返回false，则继续由父View 进行处理。同理依次向上推导，直到回到Activity的dispatchTouchEvent方法。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/fengluoye2012/article/details/83782042">https://blog.csdn.net/fengluoye2012/article/details/83782042</a></li>
+</ol>
+</blockquote>
+<h3 id="View-KeyEvent传递机制"><a href="#View-KeyEvent传递机制" class="headerlink" title="View KeyEvent传递机制"></a>View KeyEvent传递机制</h3><p>和触摸事件的传递大同小异。相比较而言，KeyEvent事件会更加简单一些，因为触摸事件有ActionDown，ActionUp，中间还有若干次的ActionMove。</p>
+<h3 id="View滚动事件分析，边际检测"><a href="#View滚动事件分析，边际检测" class="headerlink" title="View滚动事件分析，边际检测"></a>View滚动事件分析，边际检测</h3><h3 id="ViewPager使用和实现原理分析"><a href="#ViewPager使用和实现原理分析" class="headerlink" title="ViewPager使用和实现原理分析"></a>ViewPager使用和实现原理分析</h3><h3 id="Android-Jetpack"><a href="#Android-Jetpack" class="headerlink" title="Android Jetpack"></a>Android Jetpack</h3><p>Room:官方数据库Orm框架<br>LifeCycle： 构建生命周期感知型组件，这些组件可以根据 Activity 或 Fragment 的当前生命周期状态调整行为<br>WorkManager：满足您的后台调度需求<br>Navigation：管理应用流程<br>ViewModels： 帮助应用实现更好的MVVM架构<br>DataBinding： 主要是基于依赖注入实现配置化UI的框架，对比框架有ViewBindings，GreenOrm<br>ConstraintLayout: 主要是可以减少布局层数，实现更灵活的页面布局</p>
+<h3 id="线程间通信方式有几种"><a href="#线程间通信方式有几种" class="headerlink" title="线程间通信方式有几种"></a>线程间通信方式有几种</h3><h3 id="为什么在Looper中while-true-取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系"><a href="#为什么在Looper中while-true-取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系" class="headerlink" title="为什么在Looper中while true 取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系"></a>为什么在Looper中while true 取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系</h3><h3 id="为什么不能在工作线程直接刷新UI"><a href="#为什么不能在工作线程直接刷新UI" class="headerlink" title="为什么不能在工作线程直接刷新UI"></a>为什么不能在工作线程直接刷新UI</h3><h3 id="Android-自定义View和ViewGroup需要实现的方法"><a href="#Android-自定义View和ViewGroup需要实现的方法" class="headerlink" title="Android 自定义View和ViewGroup需要实现的方法"></a>Android 自定义View和ViewGroup需要实现的方法</h3><h3 id="Android-draw，-onDraw-，onLayout，方法的区别和联系"><a href="#Android-draw，-onDraw-，onLayout，方法的区别和联系" class="headerlink" title="Android draw， onDraw ，onLayout，方法的区别和联系"></a>Android draw， onDraw ，onLayout，方法的区别和联系</h3><h3 id="Android-绘图相关-Paint-几种颜色混合模式"><a href="#Android-绘图相关-Paint-几种颜色混合模式" class="headerlink" title="Android 绘图相关 Paint 几种颜色混合模式"></a>Android 绘图相关 Paint 几种颜色混合模式</h3><h3 id="Android-Animation类型"><a href="#Android-Animation类型" class="headerlink" title="Android Animation类型"></a>Android Animation类型</h3><h3 id="如何优化图片加载"><a href="#如何优化图片加载" class="headerlink" title="如何优化图片加载"></a>如何优化图片加载</h3><h3 id="实现一个简单的LruCache"><a href="#实现一个简单的LruCache" class="headerlink" title="实现一个简单的LruCache"></a>实现一个简单的LruCache</h3><h3 id="Android中新增的几种数据类型"><a href="#Android中新增的几种数据类型" class="headerlink" title="Android中新增的几种数据类型"></a>Android中新增的几种数据类型</h3><p>SparseArray，IntSparseArray等</p>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><h3 id="Android-Service相关知识"><a href="#Android-Service相关知识" class="headerlink" title="Android Service相关知识"></a>Android Service相关知识</h3><ol>
+<li><p>生命周期。Service类型，两种方式 start&amp;bind区别 。</p>
+</li>
+<li><p>Service里面弹出Dialog的方式</p>
+</li>
+</ol>
+<h2 id="广播"><a href="#广播" class="headerlink" title="广播"></a>广播</h2><p>1.广播的类型</p>
+<p>2.Broadcast ANR</p>
+<h2 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h2><ol>
+<li><p>ContentProvider中使用的Context</p>
+</li>
+<li><p>ContentProvider的生命周期</p>
+</li>
+</ol>
+<h2 id="Android-常用的系统服务"><a href="#Android-常用的系统服务" class="headerlink" title="Android 常用的系统服务"></a>Android 常用的系统服务</h2><h3 id="1-AMS"><a href="#1-AMS" class="headerlink" title="1. AMS"></a>1. AMS</h3><h3 id="2-PackageManagerService"><a href="#2-PackageManagerService" class="headerlink" title="2. PackageManagerService"></a>2. PackageManagerService</h3><h3 id="3-WindowManagerService"><a href="#3-WindowManagerService" class="headerlink" title="3. WindowManagerService"></a>3. WindowManagerService</h3><h3 id="4-InputManagerService"><a href="#4-InputManagerService" class="headerlink" title="4. InputManagerService"></a>4. InputManagerService</h3><h3 id="5-NotificationService"><a href="#5-NotificationService" class="headerlink" title="5. NotificationService"></a>5. NotificationService</h3><h3 id="6-AccountManagerService"><a href="#6-AccountManagerService" class="headerlink" title="6. AccountManagerService"></a>6. AccountManagerService</h3><h3 id="7-PowerManagerService"><a href="#7-PowerManagerService" class="headerlink" title="7. PowerManagerService"></a>7. PowerManagerService</h3><h2 id="Android-存储系统和存储优化相关内容"><a href="#Android-存储系统和存储优化相关内容" class="headerlink" title="Android 存储系统和存储优化相关内容"></a>Android 存储系统和存储优化相关内容</h2><h2 id="AndroidStudio相关"><a href="#AndroidStudio相关" class="headerlink" title="AndroidStudio相关"></a>AndroidStudio相关</h2><h3 id="AndroidStudio三方包管理工具maven"><a href="#AndroidStudio三方包管理工具maven" class="headerlink" title="AndroidStudio三方包管理工具maven"></a>AndroidStudio三方包管理工具maven</h3><h3 id="AndroidStudio-InstanceRun实现原理"><a href="#AndroidStudio-InstanceRun实现原理" class="headerlink" title="AndroidStudio InstanceRun实现原理"></a>AndroidStudio InstanceRun实现原理</h3><h2 id="简历上可能涉及到的内容"><a href="#简历上可能涉及到的内容" class="headerlink" title="简历上可能涉及到的内容"></a>简历上可能涉及到的内容</h2><h3 id="RN的原理"><a href="#RN的原理" class="headerlink" title="RN的原理"></a>RN的原理</h3><h3 id="Android应用-开发跨平台的几种流行方式（Native，Hybird，H5-WebView单页-）"><a href="#Android应用-开发跨平台的几种流行方式（Native，Hybird，H5-WebView单页-）" class="headerlink" title="Android应用 开发跨平台的几种流行方式（Native，Hybird，H5 +WebView单页 ）"></a>Android应用 开发跨平台的几种流行方式（Native，Hybird，H5 +WebView单页 ）</h3><h3 id="Kotlin相关知识"><a href="#Kotlin相关知识" class="headerlink" title="Kotlin相关知识"></a>Kotlin相关知识</h3><h2 id="Kotlin的一些优势分析"><a href="#Kotlin的一些优势分析" class="headerlink" title="Kotlin的一些优势分析"></a>Kotlin的一些优势分析</h2><h2 id="Kotlin-跨线程方案分析"><a href="#Kotlin-跨线程方案分析" class="headerlink" title="Kotlin 跨线程方案分析"></a>Kotlin 跨线程方案分析</h2><h2 id="Kotlin-一些语法特征"><a href="#Kotlin-一些语法特征" class="headerlink" title="Kotlin 一些语法特征"></a>Kotlin 一些语法特征</h2><h1 id="Java基础知识复习"><a href="#Java基础知识复习" class="headerlink" title="Java基础知识复习"></a>Java基础知识复习</h1><h2 id="Java5，Java6，Java7，Java8-11各版本feature"><a href="#Java5，Java6，Java7，Java8-11各版本feature" class="headerlink" title="Java5，Java6，Java7，Java8-11各版本feature"></a>Java5，Java6，Java7，Java8-11各版本feature</h2><h2 id="Java-语法"><a href="#Java-语法" class="headerlink" title="Java 语法"></a>Java 语法</h2><h3 id="数据类型，类接口和枚举"><a href="#数据类型，类接口和枚举" class="headerlink" title="数据类型，类接口和枚举"></a>数据类型，类接口和枚举</h3><h3 id="java-collection-api相关-List-Map-Table-Tree-Queue-Stack"><a href="#java-collection-api相关-List-Map-Table-Tree-Queue-Stack" class="headerlink" title="java collection api相关 List,Map,Table,Tree,Queue,Stack"></a>java collection api相关 List,Map,Table,Tree,Queue,Stack</h3><h3 id="Java-HashMap，Arraylist分析，"><a href="#Java-HashMap，Arraylist分析，" class="headerlink" title="Java HashMap，Arraylist分析，"></a>Java HashMap，Arraylist分析，</h3><h3 id="Java-concorrent-api-和多线程通信-线程池原理"><a href="#Java-concorrent-api-和多线程通信-线程池原理" class="headerlink" title="Java concorrent api 和多线程通信 线程池原理"></a>Java concorrent api 和多线程通信 线程池原理</h3><h3 id="Java-ThreadLocal原理"><a href="#Java-ThreadLocal原理" class="headerlink" title="Java ThreadLocal原理"></a>Java ThreadLocal原理</h3><h1 id="Android-Framework相关知识复习"><a href="#Android-Framework相关知识复习" class="headerlink" title="Android Framework相关知识复习"></a>Android Framework相关知识复习</h1><h2 id="Android-Binder-机制"><a href="#Android-Binder-机制" class="headerlink" title="Android Binder 机制"></a>Android Binder 机制</h2><h3 id="Binder-原理（上层，Linux层，-Kernel层）"><a href="#Binder-原理（上层，Linux层，-Kernel层）" class="headerlink" title="Binder 原理（上层，Linux层， Kernel层）"></a>Binder 原理（上层，Linux层， Kernel层）</h3><h3 id="Binder-的应用"><a href="#Binder-的应用" class="headerlink" title="Binder 的应用"></a>Binder 的应用</h3><h2 id="Android-跨进程通信的其他方式"><a href="#Android-跨进程通信的其他方式" class="headerlink" title="Android 跨进程通信的其他方式"></a>Android 跨进程通信的其他方式</h2><h2 id="Android-系统启动流程分析"><a href="#Android-系统启动流程分析" class="headerlink" title="Android 系统启动流程分析"></a>Android 系统启动流程分析</h2><h2 id="Android-应用启动分析"><a href="#Android-应用启动分析" class="headerlink" title="Android 应用启动分析"></a>Android 应用启动分析</h2><h2 id="Android-（JVM虚拟机）内存泄露的原理"><a href="#Android-（JVM虚拟机）内存泄露的原理" class="headerlink" title="Android （JVM虚拟机）内存泄露的原理"></a>Android （JVM虚拟机）内存泄露的原理</h2><h2 id="Android-ANR的定义"><a href="#Android-ANR的定义" class="headerlink" title="Android ANR的定义"></a>Android ANR的定义</h2><p>1、发生原因<br>一句话总结：没有在规定的时间内，干完要干的事情，就会发生ANR。</p>
+<p>2、ANR分类<br>从发生的场景分类：</p>
+<p>Input事件超过5s没有被处理完<br>Service处理超时，前台20s，后台200s<br>BroadcastReceiver处理超时，前台10S，后台60s<br>ContentProvider执行超时，比较少见</p>
+<p>3、从发生的原因分：</p>
+<p>主线程有耗时操作，如有复杂的layout布局，IO操作等。<br>被Binder对端block<br>被子线程同步锁block<br>Binder被占满导致主线程无法和SystemServer通信<br>得不到系统资源（CPU/RAM/IO）</p>
+<p>4、从进程的角度分：</p>
+<p>问题出在当前进程:<br>主线程本身耗时, 或则主线程的消息队列存在耗时操作;<br>主线程被本进程的其他子线程所blocked;<br>问题出在远端进程(一般是binder call或socket等通信方式)</p>
+<h2 id="Android-输入事件的产生和传递机制分析"><a href="#Android-输入事件的产生和传递机制分析" class="headerlink" title="Android 输入事件的产生和传递机制分析"></a>Android 输入事件的产生和传递机制分析</h2><h2 id="Android-apk打包流程分析和apk的签名机制"><a href="#Android-apk打包流程分析和apk的签名机制" class="headerlink" title="Android apk打包流程分析和apk的签名机制"></a>Android apk打包流程分析和apk的签名机制</h2><h2 id="Android-中View的底层绘制原理Chaerographer和SurfaceFlinger"><a href="#Android-中View的底层绘制原理Chaerographer和SurfaceFlinger" class="headerlink" title="Android 中View的底层绘制原理Chaerographer和SurfaceFlinger"></a>Android 中View的底层绘制原理Chaerographer和SurfaceFlinger</h2><h2 id="Android-丢帧-冻帧-和帧率优化相关知识分析"><a href="#Android-丢帧-冻帧-和帧率优化相关知识分析" class="headerlink" title="Android 丢帧 冻帧 和帧率优化相关知识分析"></a>Android 丢帧 冻帧 和帧率优化相关知识分析</h2><h2 id="Android-各个主要版本的Feature"><a href="#Android-各个主要版本的Feature" class="headerlink" title="Android 各个主要版本的Feature"></a>Android 各个主要版本的Feature</h2><h2 id="Android-编译系统相关知识-make-mk-bp-，Aosp库各个目录的作用。以及主要版本的演进Android5-1，Android-6-0-Android-8-0-Android-9-0"><a href="#Android-编译系统相关知识-make-mk-bp-，Aosp库各个目录的作用。以及主要版本的演进Android5-1，Android-6-0-Android-8-0-Android-9-0" class="headerlink" title="Android 编译系统相关知识 make .mk,.bp ，Aosp库各个目录的作用。以及主要版本的演进Android5.1，Android 6.0,Android 8.0,Android 9.0"></a>Android 编译系统相关知识 make .mk,.bp ，Aosp库各个目录的作用。以及主要版本的演进Android5.1，Android 6.0,Android 8.0,Android 9.0</h2><h2 id="Android-selinux-相关知识-sepolicy的定义，生成。"><a href="#Android-selinux-相关知识-sepolicy的定义，生成。" class="headerlink" title="Android selinux 相关知识 sepolicy的定义，生成。"></a>Android selinux 相关知识 sepolicy的定义，生成。</h2><h2 id="Android-内存优化相关内容"><a href="#Android-内存优化相关内容" class="headerlink" title="Android 内存优化相关内容"></a>Android 内存优化相关内容</h2><h2 id="Android-I-O优化相关内容"><a href="#Android-I-O优化相关内容" class="headerlink" title="Android I/O优化相关内容"></a>Android I/O优化相关内容</h2><h3 id="Linux-I-O-的基本组成"><a href="#Linux-I-O-的基本组成" class="headerlink" title="Linux I/O 的基本组成"></a>Linux I/O 的基本组成</h3><p>众所周知，Android 基于 Linux 系统，先介绍一些 Linux 上 I/O 的知识。</p>
+<ol>
+<li>I/O 操作由应用程序、文件系统和磁盘共同完成，应用程序将 I/O 命令发送给文件系统，文件系统在合适的时间把 I/O 指令发送给磁盘。I/O 的流程如下图：</li>
+</ol>
+<p><img src="images/interview/image/io1.webp" alt="io流程图"></p>
+<p>CPU 和内存的速度比磁盘快得多，I/O 操作的瓶颈在于磁盘的性能。为了降低磁盘对应用程序的影响，文件系统要进行各种各样的优化。</p>
+<ol start="2">
+<li><p>文件系统<br>简单来说，文件系统就是存储和组织数据的方式。应用程序调用 read() 方法，系统会通过中断从用户空间进入内核空间，然后经过虚拟文件系统、具体文件系统、页缓存。<br><img src="images/interview/image/io2.webp" alt="文件系统"></p>
+<ul>
+<li>虚拟文件系统（VFS）。主要用于屏蔽具体的文件系统，为应用程序的操作提供一个统一的接口。</li>
+<li>文件系统（File System）。ext4、F2FS 都是具体文件系统实现。每个文件系统都有适合自己的场景。</li>
+<li>页缓存（Page Cache）。文件系统对数据的缓存，读文件时先检查页缓存，如果命中就不去读磁盘。</li>
+</ul>
+</li>
+</ol>
+<ol start="3">
+<li>磁盘<br>磁盘指的是系统的存储设备，常见的有机械硬盘、固态硬盘等。如果发现应用程序要读的数据没有在页缓存中，这时候就需要真正向磁盘发起 I/O 请求。磁盘 I/O 的过程要先经过内核的通用块层、I/O 调度层、设备驱动层，最后才会交给具体的硬件设备处理。</li>
+</ol>
+<p><img src="images/interview/image/io3.webp" alt="磁盘调度架构图"></p>
+<p>磁盘架构</p>
+<ul>
+<li>通用块层。接收上层发出的磁盘请求，并最终发出 I/O 请求。它与 VPS 的作用类似。</li>
+<li>I/O 调度层。根据设置的调度算法对请求合并和排序。不能接收到磁盘请求就立刻交给驱动层处理。</li>
+<li>块设备驱动层。根据具体的物理设备，选择对应的驱动程序，通过操控硬件设备完成最终的 I/O 请求。</li>
+</ul>
+<h3 id="Android-IO"><a href="#Android-IO" class="headerlink" title="Android IO"></a>Android IO</h3><ol>
+<li><p>文件系统： Android普遍采用的是ext4的文件系统，以及f2fs（2012三星针对为闪存研发的文件系统，它针对闪存进行了大量优化，F2FS 文件系统在小文件的随机读写方面比 ext4 更快，<strong>随机写性能提高</strong>），目前还有只在华为上应用的，华为自研的EROFS（2018年6月，华为工程师在开源社区展示了基于Linux的全新只读文件系统EROFS（Extendable Read-Only File System），采用改进的压缩算法，致力于提高文件访问性能，特别是<strong>随机读</strong>性能。根据当时公布的测试数据，可以看到执行随机读取数据时，EROFS有着一边倒的优势，并且文件压缩率越小时优势越明显：当文件压缩率为4%（即100MB文件压缩为4MB）时，提升高达172%。在EROFS面世后的半年多里，华为工程师对其持续打磨，终于在P30上实现了规模商用）</p>
+</li>
+<li><p>磁盘格式： Android 使用的闪存主流有2种类型，一种是emmc（Embedded Multi Media Card），另外一种是UFS（2.0,2.1），USF的读写速度更快，性能更好（最高速度在300MB/s以下的大几率都是eMMC，在500MB/s附近则可能是UFS 2.0，在700MB/s以上则较大可能是UFS 2.1了）</p>
+<ul>
+<li><p>查看磁盘类型方法：<code>ls /proc/fs/*</code> ；在ext4文件系统下如果看到很多个emmc-blkxxx，则是emmc的 ，如果说文件系统为f2fs的就继续查看 <code>ls /proc/fs/f2fs/</code>下，如果说以sd开头则是ufs居多。</p>
+</li>
+<li><p>另外，如果说是ext4的文件系统，查看emmc-blk+数字对应的具体分区的方法：</p>
+<blockquote>
+<p><code>ls -l /dev/block/platform/ff0f0000.rksdmmc/by-name/</code></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>手机变卡<br>Android 手机用久了会变卡，除了系统升级、设备折旧等因素，还和 I/O 有密切关系。I/O 操作变慢的原因有下面几条：</p>
+<ul>
+<li><p>内存不足。系统回收 Page Cache 和 Buffer Cache 的内存，大部分的写操作会直接落盘，导致性能低下。</p>
+</li>
+<li><p>写入放大<br>闪存重复写入需要先进行擦除，一次写入会引起整个块数据的迁移，导致写入时间非常久。</p>
+</li>
+<li><p>设备性能差<br>在高负载的情况下容易出现瓶颈。</p>
+</li>
+<li><p>文件损坏<br>文件损坏是令人头疼的问题，大多是由不正确的操作导致的。文件损坏的原因可以从应用程序、    文件系统和磁盘三个角度来分析：</p>
+<ul>
+<li>应用程序。<br>大部分的 I/O 方法都不是原子操作，文件的跨进程或者多线程写入、使用一个已经关闭的文件描述符 fd 来操作文件，都有可能导致数据被覆盖或者删除。</li>
+<li>文件系统。虽说内核崩溃或者系统突然断电都有可能导致文件系统损坏，不过文件系统也做了很多的保护措施。例如 system 分区保证只读不可写，增加异常检查和恢复机制。</li>
+<li>磁盘。手机上使用的闪存是电子式的存储设备，所以在资料传输过程可能会发生电子遗失等现象导致数据错误。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>I/O 操作的类型</p>
+</li>
+</ol>
+<p>总体分为，标准IO，mmap,直接IO三种类型。</p>
+<p><img src="images/interview/image/io4.webp" alt="IO操作类型"></p>
+<pre><code>1. 标准 I/O
+应用程序平时用到 read/write 操作都属于标准 I/O，也就是缓存 I/O（Buffered I/O）。它的关键特性有：
+    - 对于读操作，当应用程序读取某块数据时，如果这块数据已经在页缓存中，那么就不需要经过物理读盘操作。
+    - 对于写操作，应用程序会先将数据写到页缓存中去，不需要等全部数据被写回磁盘，系统会定期将页缓存中的数据刷到磁盘上。
+    - 缓存 I/O 可以很大程度减少真正读写磁盘的次数，从而提升性能。但是延迟写机制可能会导致数据丢失。在实际应用中，如果某些数据非常重要，我们应该采用同步写机制。
+    - 读操作时，数据会先从磁盘拷贝到 Page Cache 中，然后再从 Page Cache 拷贝到应用程序的用户空间，这样就会多一次内存拷贝。内存相对磁盘是高速设备，即使多拷贝一次，也比真正读一次硬盘要快。
+
+2. mmap
+mmap 把文件映射到进程的地址空间，提高了 I/O 的性能。
+mmap 的优点有：
+    - 减少系统调用。只需要一次 mmap() 系统调用，后续所有的调用像操作内存一样。
+    - 减少数据拷贝。mmap 只需要从磁盘拷贝一次，由于做过内存映射，不需要再拷贝回用户空间。
+    - 可靠性高。mmap 把数据写入页缓存后，跟缓存 I/O 的延迟写机制一样。
+存在的缺点：
+    - 虚拟内存增大。Apk、Dex、so 都是通过 mmap 读取。mmap 会导致虚拟内存增大，mmap 大文件容易出现 OOM。
+    - 磁盘延迟。mmap 通过缺页中断向磁盘发起真正的磁盘 I/O，不能通过 mmap 消除磁盘 I/O 的延迟。在 Android 中可以将文件通过 MemoryFile 或者 MappedByteBuffer 映射到内存，然后进行读写，使用这种方式对于小文件和频繁读写操作的文件还是有一定优势的。
+
+mmap 比较适合对同一块区域频繁读写的情况，推荐使用 I/O 线程来操作。用户日志、数据上报都满足这种场景，另外需要跨进程同步的时候，mmap 也是一个不错的选择。Android 跨进程通信有自己独有的 Binder 机制，它内部也是使用 mmap 实现。
+
+3. Direct I/O
+一些数据库自己实现了数据和索引的缓存管理，对页缓存的依赖没那么强烈。它们想绕开页缓存机制，减少一次数据拷贝，它的数据也不会污染页缓存。
+直接 I/O 访问文件方式减少了一次数据拷贝和一些系统调用的耗时，很大程度降低了 CPU 的使用率以及内存的占用。负面影响就是读写操作都是同步执行，导致应用程序等待。
+
+4. 同步与异步 I/O
+多线程阻塞式在 I/O 操作上的并没有优势，I/O 操作的主要瓶颈在于磁盘带宽。所以 I/O 操作不能开大量的线程。
+NIO 是非阻塞 I/O，将 I/O 以事件的方式通知，可以减少线程切换的开销。NIO 的最大作用不是减少读取文件的耗时，而是最大化提升应用整体的 CPU 利用率。
+另外，非常推荐 Square 的 Okio，它支持同步和异步 I/O，也做了比较多的优化。</code></pre>
+<p>I/O 优化对提升应用的体验非常有用，希望上面所讲的内容对你有帮助。</p>
+<p>作者：落英坠露<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/43af9c156674">https://www.jianshu.com/p/43af9c156674</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+<ol start="5">
+<li><p>IO优化</p>
+<ol>
+<li><p>emmc 擦写次数和判断 emmc 使用寿命是否到期方法</p>
+</li>
+<li><p>查看系统整体的 io 状态</p>
+<p> 2.1 iostat</p>
+<p> 比如说我们想查看当前系统的 io 状态，以 kb/s　作为单位:    </p>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1|root@rk3368:/ # busybox iostat -k -d                                </span><br><span class="line">Linux 3.10.0 (localhost) 	03/03/21 	_aarch64_	(8 CPU)</span><br><span class="line"></span><br><span class="line">Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn</span><br><span class="line">mmcblk0          70.26      1981.90       269.29  225512879   30641156</span><br><span class="line">mmcblk0p7         0.00         0.18         0.00      20288          0</span><br><span class="line">mmcblk0p9         0.00         0.00         1.10        305     124868</span><br><span class="line">mmcblk0p11        3.70       228.62         0.00   26013646         16</span><br><span class="line">mmcblk0p12        0.00         0.00         0.11        474      11992</span><br><span class="line">mmcblk0p15       59.42      1753.10       268.08  199478166   30504280</span><br></pre></td></tr></table></figure>
+
+    比如说我们想查看当前系统的 io 状态，以 kb/s　作为单位，并且没两分钟统计一次，共5次:
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">busybox iostat -d -k  2 5</span><br></pre></td></tr></table></figure>
+    2.2 iotop
+
+    iostat　只能查看系统的整体 io　状态，当 io 状态异常高时，　不能定位是哪个进程引起的问题，　这时我们可以使用 iotop 这个工具来查看每个进程的 io 占用比例。但是iotop只在Android9.0以上才原生集成，低版本系统，需要push Github开源脚本 [iotop.sh](&#39;https://github.com/laufersteppenwolf/iotop&#39;). 但是该脚本我在使用过程中发现会有不能用的情况，提示`Your kernel does not support I/O accounting,
+    which is required for this tool to work :(`
+
+    2.3 vmstat
+    vmstat是一个非常有用的脚本，用来查看虚拟机当前的一些状态数据。
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vmstat 2</span><br></pre></td></tr></table></figure>
+    2.4 http://qiushao.net/2020/02/11/Android/iostat/
+    iotop　只可以查看某个时间点的 io 速率，　我们需要统计某个进程总共的 io 总量时就得使用　cat /proc/$pid/io 这个方法了。</code></pre>
+<h2 id="Android-性能优化相关内容"><a href="#Android-性能优化相关内容" class="headerlink" title="Android 性能优化相关内容"></a>Android 性能优化相关内容</h2><h1 id="HTTP相关知识"><a href="#HTTP相关知识" class="headerlink" title="HTTP相关知识"></a>HTTP相关知识</h1><h2 id="HTTP三次握手和四次挥手"><a href="#HTTP三次握手和四次挥手" class="headerlink" title="HTTP三次握手和四次挥手"></a>HTTP三次握手和四次挥手</h2><h2 id="HTTP协议演进（HTTP1-0-1-1-2-0）"><a href="#HTTP协议演进（HTTP1-0-1-1-2-0）" class="headerlink" title="HTTP协议演进（HTTP1.0,1.1,2.0）"></a>HTTP协议演进（HTTP1.0,1.1,2.0）</h2><h2 id="HTTPS-加密方式（对称加密，非对称加密）"><a href="#HTTPS-加密方式（对称加密，非对称加密）" class="headerlink" title="HTTPS 加密方式（对称加密，非对称加密）"></a>HTTPS 加密方式（对称加密，非对称加密）</h2><h2 id="HTTP-协议详解，Head-Body分析"><a href="#HTTP-协议详解，Head-Body分析" class="headerlink" title="HTTP 协议详解，Head Body分析"></a>HTTP 协议详解，Head Body分析</h2><h1 id="虚拟机相关"><a href="#虚拟机相关" class="headerlink" title="虚拟机相关"></a>虚拟机相关</h1><h2 id="JVM虚拟机的内存模型"><a href="#JVM虚拟机的内存模型" class="headerlink" title="JVM虚拟机的内存模型"></a>JVM虚拟机的内存模型</h2><h2 id="Android虚拟机（Dalvik-art）虚拟机内存模型和特点"><a href="#Android虚拟机（Dalvik-art）虚拟机内存模型和特点" class="headerlink" title="Android虚拟机（Dalvik,art）虚拟机内存模型和特点"></a>Android虚拟机（Dalvik,art）虚拟机内存模型和特点</h2><h2 id="Android-应用-启动流程虚拟机流程分析"><a href="#Android-应用-启动流程虚拟机流程分析" class="headerlink" title="Android 应用 启动流程虚拟机流程分析"></a>Android 应用 启动流程虚拟机流程分析</h2><h2 id="Android-虚拟机的垃圾回收机制"><a href="#Android-虚拟机的垃圾回收机制" class="headerlink" title="Android 虚拟机的垃圾回收机制"></a>Android 虚拟机的垃圾回收机制</h2><h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><h2 id="工厂模式，简单工厂"><a href="#工厂模式，简单工厂" class="headerlink" title="工厂模式，简单工厂"></a>工厂模式，简单工厂</h2><h2 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h2><h2 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h2><h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><h2 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h2><h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><h2 id="模板模式"><a href="#模板模式" class="headerlink" title="模板模式"></a>模板模式</h2><h2 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h2><h2 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h2><h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><h2 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h2><h2 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h2><h2 id="设计模式的几大原则"><a href="#设计模式的几大原则" class="headerlink" title="设计模式的几大原则"></a>设计模式的几大原则</h2><h3 id="开闭原则"><a href="#开闭原则" class="headerlink" title="开闭原则"></a>开闭原则</h3><h3 id="迪米特法则"><a href="#迪米特法则" class="headerlink" title="迪米特法则"></a>迪米特法则</h3><h1 id="数据结构和算法"><a href="#数据结构和算法" class="headerlink" title="数据结构和算法"></a>数据结构和算法</h1><h1 id="高频面试题"><a href="#高频面试题" class="headerlink" title="高频面试题"></a>高频面试题</h1>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2021/01/28/use-python2-7-crawl-Netease-stock-daily-data-into-mysql-db/" rel="prev" title="用python爬取网易金融股票每日数据并存入MySql数据库">
+      <i class="fa fa-chevron-left"></i> 用python爬取网易金融股票每日数据并存入MySql数据库
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">Android 基础知识复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity"><span class="nav-number">1.1.</span> <span class="nav-text">Activity</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Activity%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.1.1.</span> <span class="nav-text">Activity生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Activity%E7%9A%84%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F%E5%92%8CAndroid%E7%9A%84%E4%BB%BB%E5%8A%A1%E6%A0%88%E5%88%86%E6%9E%90"><span class="nav-number">1.1.2.</span> <span class="nav-text">Activity的启动模式和Android的任务栈分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F%EF%BC%9AStandard%EF%BC%8CSingleTop%EF%BC%8CSingleTask-SingleInstance"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">四种启动模式：Standard，SingleTop，SingleTask,SingleInstance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#taskAffinity"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">taskAffinity</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IntentFlags"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">IntentFlags</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8Android-View%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.3.</span> <span class="nav-text">常用Android View的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView-%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.4.</span> <span class="nav-text">RecyclerView 使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View-%E8%A7%A6%E6%91%B8%E4%BA%8B%E4%BB%B6%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.5.</span> <span class="nav-text">View 触摸事件传递机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View-KeyEvent%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6"><span class="nav-number">1.1.6.</span> <span class="nav-text">View KeyEvent传递机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View%E6%BB%9A%E5%8A%A8%E4%BA%8B%E4%BB%B6%E5%88%86%E6%9E%90%EF%BC%8C%E8%BE%B9%E9%99%85%E6%A3%80%E6%B5%8B"><span class="nav-number">1.1.7.</span> <span class="nav-text">View滚动事件分析，边际检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ViewPager%E4%BD%BF%E7%94%A8%E5%92%8C%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="nav-number">1.1.8.</span> <span class="nav-text">ViewPager使用和实现原理分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Jetpack"><span class="nav-number">1.1.9.</span> <span class="nav-text">Android Jetpack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F%E6%9C%89%E5%87%A0%E7%A7%8D"><span class="nav-number">1.1.10.</span> <span class="nav-text">线程间通信方式有几种</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9C%A8Looper%E4%B8%ADwhile-true-%E5%8F%96%E6%B6%88%E6%81%AF%E4%B8%8D%E4%BC%9A%E9%98%BB%E5%A1%9E%E4%B8%BB%E7%BA%BF%E7%A8%8B%EF%BC%8CLooper%EF%BC%8CMessageQueue%EF%BC%8CHandler%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.11.</span> <span class="nav-text">为什么在Looper中while true 取消息不会阻塞主线程，Looper，MessageQueue，Handler的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E5%9C%A8%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E7%9B%B4%E6%8E%A5%E5%88%B7%E6%96%B0UI"><span class="nav-number">1.1.12.</span> <span class="nav-text">为什么不能在工作线程直接刷新UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-%E8%87%AA%E5%AE%9A%E4%B9%89View%E5%92%8CViewGroup%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.13.</span> <span class="nav-text">Android 自定义View和ViewGroup需要实现的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-draw%EF%BC%8C-onDraw-%EF%BC%8ConLayout%EF%BC%8C%E6%96%B9%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB"><span class="nav-number">1.1.14.</span> <span class="nav-text">Android draw， onDraw ，onLayout，方法的区别和联系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-%E7%BB%98%E5%9B%BE%E7%9B%B8%E5%85%B3-Paint-%E5%87%A0%E7%A7%8D%E9%A2%9C%E8%89%B2%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.15.</span> <span class="nav-text">Android 绘图相关 Paint 几种颜色混合模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Animation%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.16.</span> <span class="nav-text">Android Animation类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD"><span class="nav-number">1.1.17.</span> <span class="nav-text">如何优化图片加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84LruCache"><span class="nav-number">1.1.18.</span> <span class="nav-text">实现一个简单的LruCache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android%E4%B8%AD%E6%96%B0%E5%A2%9E%E7%9A%84%E5%87%A0%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.19.</span> <span class="nav-text">Android中新增的几种数据类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#service"><span class="nav-number">1.2.</span> <span class="nav-text">service</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Service%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">1.2.1.</span> <span class="nav-text">Android Service相关知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%BF%E6%92%AD"><span class="nav-number">1.3.</span> <span class="nav-text">广播</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ContentProvider"><span class="nav-number">1.4.</span> <span class="nav-text">ContentProvider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.5.</span> <span class="nav-text">Android 常用的系统服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-AMS"><span class="nav-number">1.5.1.</span> <span class="nav-text">1. AMS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-PackageManagerService"><span class="nav-number">1.5.2.</span> <span class="nav-text">2. PackageManagerService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-WindowManagerService"><span class="nav-number">1.5.3.</span> <span class="nav-text">3. WindowManagerService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-InputManagerService"><span class="nav-number">1.5.4.</span> <span class="nav-text">4. InputManagerService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-NotificationService"><span class="nav-number">1.5.5.</span> <span class="nav-text">5. NotificationService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-AccountManagerService"><span class="nav-number">1.5.6.</span> <span class="nav-text">6. AccountManagerService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-PowerManagerService"><span class="nav-number">1.5.7.</span> <span class="nav-text">7. PowerManagerService</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E5%92%8C%E5%AD%98%E5%82%A8%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="nav-number">1.6.</span> <span class="nav-text">Android 存储系统和存储优化相关内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AndroidStudio%E7%9B%B8%E5%85%B3"><span class="nav-number">1.7.</span> <span class="nav-text">AndroidStudio相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AndroidStudio%E4%B8%89%E6%96%B9%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7maven"><span class="nav-number">1.7.1.</span> <span class="nav-text">AndroidStudio三方包管理工具maven</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AndroidStudio-InstanceRun%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">1.7.2.</span> <span class="nav-text">AndroidStudio InstanceRun实现原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8E%86%E4%B8%8A%E5%8F%AF%E8%83%BD%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E5%86%85%E5%AE%B9"><span class="nav-number">1.8.</span> <span class="nav-text">简历上可能涉及到的内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RN%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">1.8.1.</span> <span class="nav-text">RN的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android%E5%BA%94%E7%94%A8-%E5%BC%80%E5%8F%91%E8%B7%A8%E5%B9%B3%E5%8F%B0%E7%9A%84%E5%87%A0%E7%A7%8D%E6%B5%81%E8%A1%8C%E6%96%B9%E5%BC%8F%EF%BC%88Native%EF%BC%8CHybird%EF%BC%8CH5-WebView%E5%8D%95%E9%A1%B5-%EF%BC%89"><span class="nav-number">1.8.2.</span> <span class="nav-text">Android应用 开发跨平台的几种流行方式（Native，Hybird，H5 +WebView单页 ）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kotlin%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">1.8.3.</span> <span class="nav-text">Kotlin相关知识</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BC%98%E5%8A%BF%E5%88%86%E6%9E%90"><span class="nav-number">1.9.</span> <span class="nav-text">Kotlin的一些优势分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-%E8%B7%A8%E7%BA%BF%E7%A8%8B%E6%96%B9%E6%A1%88%E5%88%86%E6%9E%90"><span class="nav-number">1.10.</span> <span class="nav-text">Kotlin 跨线程方案分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kotlin-%E4%B8%80%E4%BA%9B%E8%AF%AD%E6%B3%95%E7%89%B9%E5%BE%81"><span class="nav-number">1.11.</span> <span class="nav-text">Kotlin 一些语法特征</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0"><span class="nav-number">2.</span> <span class="nav-text">Java基础知识复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java5%EF%BC%8CJava6%EF%BC%8CJava7%EF%BC%8CJava8-11%E5%90%84%E7%89%88%E6%9C%ACfeature"><span class="nav-number">2.1.</span> <span class="nav-text">Java5，Java6，Java7，Java8-11各版本feature</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-%E8%AF%AD%E6%B3%95"><span class="nav-number">2.2.</span> <span class="nav-text">Java 语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%8C%E7%B1%BB%E6%8E%A5%E5%8F%A3%E5%92%8C%E6%9E%9A%E4%B8%BE"><span class="nav-number">2.2.1.</span> <span class="nav-text">数据类型，类接口和枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-collection-api%E7%9B%B8%E5%85%B3-List-Map-Table-Tree-Queue-Stack"><span class="nav-number">2.2.2.</span> <span class="nav-text">java collection api相关 List,Map,Table,Tree,Queue,Stack</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-HashMap%EF%BC%8CArraylist%E5%88%86%E6%9E%90%EF%BC%8C"><span class="nav-number">2.2.3.</span> <span class="nav-text">Java HashMap，Arraylist分析，</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-concorrent-api-%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.4.</span> <span class="nav-text">Java concorrent api 和多线程通信 线程池原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-ThreadLocal%E5%8E%9F%E7%90%86"><span class="nav-number">2.2.5.</span> <span class="nav-text">Java ThreadLocal原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Android-Framework%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%A4%8D%E4%B9%A0"><span class="nav-number">3.</span> <span class="nav-text">Android Framework相关知识复习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-Binder-%E6%9C%BA%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">Android Binder 机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder-%E5%8E%9F%E7%90%86%EF%BC%88%E4%B8%8A%E5%B1%82%EF%BC%8CLinux%E5%B1%82%EF%BC%8C-Kernel%E5%B1%82%EF%BC%89"><span class="nav-number">3.1.1.</span> <span class="nav-text">Binder 原理（上层，Linux层， Kernel层）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder-%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">3.1.2.</span> <span class="nav-text">Binder 的应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E8%B7%A8%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1%E7%9A%84%E5%85%B6%E4%BB%96%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">Android 跨进程通信的其他方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">Android 系统启动流程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%BA%94%E7%94%A8%E5%90%AF%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">3.4.</span> <span class="nav-text">Android 应用启动分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%EF%BC%88JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%89%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E7%9A%84%E5%8E%9F%E7%90%86"><span class="nav-number">3.5.</span> <span class="nav-text">Android （JVM虚拟机）内存泄露的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-ANR%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.6.</span> <span class="nav-text">Android ANR的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E8%BE%93%E5%85%A5%E4%BA%8B%E4%BB%B6%E7%9A%84%E4%BA%A7%E7%94%9F%E5%92%8C%E4%BC%A0%E9%80%92%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90"><span class="nav-number">3.7.</span> <span class="nav-text">Android 输入事件的产生和传递机制分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-apk%E6%89%93%E5%8C%85%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90%E5%92%8Capk%E7%9A%84%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">3.8.</span> <span class="nav-text">Android apk打包流程分析和apk的签名机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E4%B8%ADView%E7%9A%84%E5%BA%95%E5%B1%82%E7%BB%98%E5%88%B6%E5%8E%9F%E7%90%86Chaerographer%E5%92%8CSurfaceFlinger"><span class="nav-number">3.9.</span> <span class="nav-text">Android 中View的底层绘制原理Chaerographer和SurfaceFlinger</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E4%B8%A2%E5%B8%A7-%E5%86%BB%E5%B8%A7-%E5%92%8C%E5%B8%A7%E7%8E%87%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E5%88%86%E6%9E%90"><span class="nav-number">3.10.</span> <span class="nav-text">Android 丢帧 冻帧 和帧率优化相关知识分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%90%84%E4%B8%AA%E4%B8%BB%E8%A6%81%E7%89%88%E6%9C%AC%E7%9A%84Feature"><span class="nav-number">3.11.</span> <span class="nav-text">Android 各个主要版本的Feature</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E7%BC%96%E8%AF%91%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-make-mk-bp-%EF%BC%8CAosp%E5%BA%93%E5%90%84%E4%B8%AA%E7%9B%AE%E5%BD%95%E7%9A%84%E4%BD%9C%E7%94%A8%E3%80%82%E4%BB%A5%E5%8F%8A%E4%B8%BB%E8%A6%81%E7%89%88%E6%9C%AC%E7%9A%84%E6%BC%94%E8%BF%9BAndroid5-1%EF%BC%8CAndroid-6-0-Android-8-0-Android-9-0"><span class="nav-number">3.12.</span> <span class="nav-text">Android 编译系统相关知识 make .mk,.bp ，Aosp库各个目录的作用。以及主要版本的演进Android5.1，Android 6.0,Android 8.0,Android 9.0</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-selinux-%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86-sepolicy%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%8C%E7%94%9F%E6%88%90%E3%80%82"><span class="nav-number">3.13.</span> <span class="nav-text">Android selinux 相关知识 sepolicy的定义，生成。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%86%85%E5%AD%98%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="nav-number">3.14.</span> <span class="nav-text">Android 内存优化相关内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-I-O%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="nav-number">3.15.</span> <span class="nav-text">Android I&#x2F;O优化相关内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux-I-O-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="nav-number">3.15.1.</span> <span class="nav-text">Linux I&#x2F;O 的基本组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-IO"><span class="nav-number">3.15.2.</span> <span class="nav-text">Android IO</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%9B%B8%E5%85%B3%E5%86%85%E5%AE%B9"><span class="nav-number">3.16.</span> <span class="nav-text">Android 性能优化相关内容</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86"><span class="nav-number">4.</span> <span class="nav-text">HTTP相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">4.1.</span> <span class="nav-text">HTTP三次握手和四次挥手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E6%BC%94%E8%BF%9B%EF%BC%88HTTP1-0-1-1-2-0%EF%BC%89"><span class="nav-number">4.2.</span> <span class="nav-text">HTTP协议演进（HTTP1.0,1.1,2.0）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS-%E5%8A%A0%E5%AF%86%E6%96%B9%E5%BC%8F%EF%BC%88%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%EF%BC%89"><span class="nav-number">4.3.</span> <span class="nav-text">HTTPS 加密方式（对称加密，非对称加密）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%EF%BC%8CHead-Body%E5%88%86%E6%9E%90"><span class="nav-number">4.4.</span> <span class="nav-text">HTTP 协议详解，Head Body分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9B%B8%E5%85%B3"><span class="nav-number">5.</span> <span class="nav-text">虚拟机相关</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">5.1.</span> <span class="nav-text">JVM虚拟机的内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88Dalvik-art%EF%BC%89%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%92%8C%E7%89%B9%E7%82%B9"><span class="nav-number">5.2.</span> <span class="nav-text">Android虚拟机（Dalvik,art）虚拟机内存模型和特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E5%BA%94%E7%94%A8-%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90"><span class="nav-number">5.3.</span> <span class="nav-text">Android 应用 启动流程虚拟机流程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Android-%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">5.4.</span> <span class="nav-text">Android 虚拟机的垃圾回收机制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">设计模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.1.</span> <span class="nav-text">单例模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.2.</span> <span class="nav-text">观察者模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F%EF%BC%8C%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82"><span class="nav-number">6.3.</span> <span class="nav-text">工厂模式，简单工厂</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.4.</span> <span class="nav-text">装饰器模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.5.</span> <span class="nav-text">建造者模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.6.</span> <span class="nav-text">策略模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.7.</span> <span class="nav-text">适配器模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.8.</span> <span class="nav-text">代理模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.9.</span> <span class="nav-text">模板模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.10.</span> <span class="nav-text">桥接模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.11.</span> <span class="nav-text">状态模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.12.</span> <span class="nav-text">组合模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.13.</span> <span class="nav-text">命令模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="nav-number">6.14.</span> <span class="nav-text">责任链模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%87%A0%E5%A4%A7%E5%8E%9F%E5%88%99"><span class="nav-number">6.15.</span> <span class="nav-text">设计模式的几大原则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E9%97%AD%E5%8E%9F%E5%88%99"><span class="nav-number">6.15.1.</span> <span class="nav-text">开闭原则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%AA%E7%B1%B3%E7%89%B9%E6%B3%95%E5%88%99"><span class="nav-number">6.15.2.</span> <span class="nav-text">迪米特法则</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95"><span class="nav-number">7.</span> <span class="nav-text">数据结构和算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">8.</span> <span class="nav-text">高频面试题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Gaohaijiao</p>
+  <div class="site-description" itemprop="description">成年人的世界，没有容易二字</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/blogs/tags/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/haijiaogao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;haijiaogao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:haijiaogao1988@163.com" title="E-Mail → mailto:haijiaogao1988@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gaohaijiao</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/pisces.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
