@@ -229,6 +229,7 @@ https://blog.csdn.net/fengluoye2012/article/details/83782042
 ### Android Jetpack
 Room:官方数据库Orm框架
 LifeCycle： 构建生命周期感知型组件，这些组件可以根据 Activity 或 Fragment 的当前生命周期状态调整行为
+LiveData： 构建可被观察的数据结构，可在数据发生变动时，主线程通知观察者，不会发生内存泄露
 WorkManager：满足您的后台调度需求
 Navigation：管理应用流程
 ViewModels： 帮助应用实现更好的MVVM架构
@@ -270,7 +271,7 @@ Looper内部维护一个消息队列，他与当前声明他的线程绑定（Th
 
 
 
-### Android 自定义View和ViewGroup需要实现的方法 
+### Android 自定义View和ViewGroup需要实现的方法
 
 View： onMeasure ，draw方法， onConfigChange方法
 
@@ -391,7 +392,7 @@ public class LRUCache<K, V> {
 
 
 
-### Android中新增的几种数据类型 
+### Android中新增的几种数据类型
 SparseArray,ArrayMap,以及LongSparseArray等是Android为了更适合嵌入式设备优化的map。
 
 1. HashMap：Key和Value都需要自动装箱存储，并且，为了支持java的Iterator接口，HashMap额外还存储了EntrySet对象。所以对于会增加内存消耗，在数据量比较多的适合比较明显。HashMap的存入和读取时间复杂度为O（1）。
@@ -1134,7 +1135,7 @@ http://qiushao.net/2020/02/18/Java/Java-%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%
 
 
 
-## JVM虚拟机的内存模型	
+## JVM虚拟机的内存模型
 
 
 ## Android虚拟机（Dalvik,art）虚拟机内存模型和特点
