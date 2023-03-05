@@ -25,6 +25,6 @@
     "hexo-server": "^2.0.0"
   },
   "devDependencies": {
-    "hexo-deployer-git": "^2.1.0"
+    "hexo-deployer-git": "^4.0.0"
   }
 }
